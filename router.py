@@ -6,10 +6,10 @@ import re
 
 hostname_regex = re.compile(r"\w{3,10}")
 macAddress_regex = re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
-dev_hostname = [] # Device Hostnames
-mac_addresses = []
-running_dev = [] # Active Devices on Wi-Fi
-mac_host = {} # Mac Addresses and Hostnames
+dev_hostname = []   # Devices Hostname
+mac_addresses = []  # Devices Mac Address
+running_dev = []    # Active Devices on Wi-Fi
+mac_host = {}   # Mac Addresses and Hostnames
 
 
 def scrape_page(link):
@@ -25,9 +25,11 @@ def get_dhcpinfo():
     count = 1
     for i, found in enumerate(soup.findAll('td'), 1):
         if i > 4:
-            if hostname_regex.search(found.text) != None and "hours" not in found.text and "192" not in found.text:
+            if hostname_regex.search(found.text) != None and "hours" not in found.text\
+                                                            and "192" not in found.text:
                 dev_hostname.append(found.text.encode('ascii'))
-            elif macAddress_regex.search(found.text) != None and "hours" not in found.text and "192" not in found.text:
+            elif macAddress_regex.search(found.text) != None and "hours" not in found.text\
+                                                                and "192" not in found.text:
                 mac_addresses.append(found.text.encode('ascii'))
 
 
@@ -35,7 +37,8 @@ def get_stationinfo():
     '''Gets information about the connected devices'''
     r, soup = scrape_page("http://192.168.1.1/wlstationlist.cmd")
     for found in soup.findAll('td'):
-        if "PTCL-BB" not in found.text and "Yes" not in found.text and "wl0" not in found.text and macAddress_regex.search(found.text.strip()) != None:
+        if "PTCL-BB" not in found.text and "Yes" not in found.text and "wl0" not in found.text\
+                                        and macAddress_regex.search(found.text.strip()) != None:
             running_dev.append(found.text.strip().lower().encode('ascii'))
 
 
@@ -44,11 +47,12 @@ def show_active_dev():
     get_stationinfo()
     get_dhcpinfo()
     mac_host = dict(zip(dev_hostname, mac_addresses))
-
+    count = 1
     for k, v in mac_host.iteritems():
         for active_clients in running_dev:
             if active_clients in v:
-                print "Hostname:%s | %s" % (k, active_clients)
+                print "%s) Hostname:%s | %s" % (count, k, active_clients.upper())
+                count += 1
     print ''
 
 
