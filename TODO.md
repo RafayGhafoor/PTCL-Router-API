@@ -1,5 +1,7 @@
 # TODO:
 
+- Better Regular Expressions and output parsing.
+- Better names for variables.
 - Make code more readable.
 - Refactor code.
 - Execute program with arguments.
@@ -7,6 +9,7 @@
 
 # Features implementation to be done:
 
+- [ ] Exclude android devices from station info and dhcp info.
 - [ ] Reboot router from script.
 - [ ] Time restriction for user (by specifying or choosing from station info) device mac address or hostname.
 - [ ] Adding URL to block unnecessary use for website, also time limit for a site usage.
