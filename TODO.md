@@ -1,12 +1,11 @@
-###TODO###:
+# TODO:
 
 - Make code more readable.
 - Refactor code.
 - Execute program with arguments.
 - Improving performance.
 
-
-###Features implementation to be done###:
+# Features implementation to be done:
 
 - [ ] Reboot router from script.
 - [ ] Time restriction for user (by specifying (or choosing from station info) device mac address or hostname).
