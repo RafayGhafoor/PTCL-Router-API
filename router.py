@@ -7,7 +7,7 @@ import re
 hostname_regex = re.compile(r"\w{3,10}")
 macAddress_regex = re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
 dev_hostname = []   # Devices Hostname
-mac_addresses = []  # Devices Mac Address
+mac_address = []  # Devices Mac Address
 running_dev = []    # Active Devices on Wi-Fi
 mac_host = {}   # Mac Addresses and Hostnames
 
@@ -30,7 +30,7 @@ def get_dhcpinfo():
                 dev_hostname.append(found.text.encode('ascii'))
             elif macAddress_regex.search(found.text) != None and "hours" not in found.text\
                                                                 and "192" not in found.text:
-                mac_addresses.append(found.text.encode('ascii'))
+                mac_address.append(found.text.encode('ascii'))
 
 
 def get_stationinfo():
@@ -46,7 +46,7 @@ def show_active_dev():
     '''Shows active devices (Mac Addresses) and their hostnames'''
     get_stationinfo()
     get_dhcpinfo()
-    mac_host = dict(zip(dev_hostname, mac_addresses))
+    mac_host = dict(zip(dev_hostname, mac_address))
     count = 1
     for k, v in mac_host.iteritems():
         for active_clients in running_dev:
@@ -70,12 +70,45 @@ def block_dev(devmac, sessionKey):
 
 def unblock_dev(udevmac, sessionKey):
     '''Unblock device using Mac Address.'''
-    print udevmac, sessionKey
-    # http://192.168.1.1/wlmacflt.cmd?action=remove&rmLst=0C:D6:BD:4A:52:02&sessionKey=812008431
     r, soup = scrape_page("http://192.168.1.1/wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, sessionKey))
     print "Unblocked."
     
+    
+def hh_to_HH(time):
+    '''Converts 12 hours format to 24 hours.'''
+    pass
+    
+    
+def reboot_router(sessionKey):
+    pass
 
+
+def time_restriction():
+    pass
+
+
+def url_filter():
+    '''Block website temporarily/permanently (i.e Temporarily, when time is specified)
+    pass
+    
+    
+def url_remove_filter():
+    '''Removes url filter after specified time or when provided.'''
+    pass
+
+
+def monitor_dev(): # Monitor Devices
+    '''Monitor devices, when they connect to router and disconnect. Also 
+    gets the time a device remains connected to the router.'''
+    pass
+    
+    
+def dev_conninfo():   # Device Connection Info
+    '''Analyzes how much time a device remains connected to the device throughout
+    the day.'''
+    pass
+ 
+    
 qs = int(raw_input("1) To Block Mac Address: \n2) To Unblock Mac Address: "))
 
 if qs == 1:
