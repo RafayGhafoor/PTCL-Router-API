@@ -80,15 +80,17 @@ def hh_to_HH(time):
     
     
 def reboot_router(sessionKey):
+    '''Reboots Router.'''
     pass
 
 
 def time_restriction():
+    '''Restricts user from using internet for limited time.''' 
     pass
 
 
 def url_filter():
-    '''Block website temporarily/permanently (i.e Temporarily, when time is specified)
+    '''Block website temporarily/permanently (i.e Temporarily, when time is specified)'''
     pass
     
     
@@ -108,6 +110,16 @@ def dev_conninfo():   # Device Connection Info
     the day.'''
     pass
  
+
+def parse_args():
+    '''Parse arguments.'''
+    pass
+    
+    
+def main():
+    '''functional code goes here.'''
+    pass
+    
     
 qs = int(raw_input("1) To Block Mac Address: \n2) To Unblock Mac Address: "))
 
@@ -124,4 +136,5 @@ elif qs == 2:
 else:
     print "Wrong Choice"
 
-
+# Call main function
+# main()
