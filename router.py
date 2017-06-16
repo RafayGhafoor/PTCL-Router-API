@@ -81,7 +81,8 @@ def hh_to_HH(time):
     
 def reboot_router(sessionKey):
     '''Reboots Router.'''
-    pass
+    r, soup = scrape_page("http://192.168.1.1/rebootinfo.cgi?sessionKey=%s") % SessionKey
+    print "Rebooted."
 
 
 def time_restriction():
@@ -121,7 +122,7 @@ def main():
     pass
     
     
-qs = int(raw_input("1) To Block Mac Address: \n2) To Unblock Mac Address: "))
+qs = int(raw_input("1) To Block Mac Address: \n2) To Unblock Mac Address: \n3) Reboot Router: "))
 
 if qs == 1:
     show_active_dev()
@@ -132,6 +133,9 @@ elif qs == 2:
     show_active_dev()
     udev_mac = raw_input("Please Enter Device Mac Address: ").upper()
     unblock_dev(udev_mac, get_sessionkey())
+   
+elif qs == 3:
+    reboot_router(get_sessionkey())
         
 else:
     print "Wrong Choice"
