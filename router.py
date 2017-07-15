@@ -150,23 +150,4 @@ class Router(object):
         suspects = {"User 1": "Mac_Address"}
  
     
-# qs = int(raw_input("1) To Block Mac Address: \n2) To Unblock Mac Address: \n3) Reboot Router: "))
-# 
-# if qs == 1:
-#     show_self.active_dev()
-#     dev_mac = raw_input("Please Enter Device Mac Address: ").upper()
-#     block_dev(dev_mac, get_sessionkey())
-#     
-# elif qs == 2:
-#     show_self.active_dev()
-#     udev_mac = raw_input("Please Enter Device Mac Address: ").upper()
-#     unblock_dev(udev_mac, get_sessionkey())
-#    
-# elif qs == 3:
-#     reboot_router(get_sessionkey())
-#         
-# else:
-#     print "Wrong Choice"
 
-# Call main function
-# main()
