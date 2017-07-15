@@ -1,9 +1,10 @@
 # TODO:
 
-- Optimized Regular Expressions and output parsing.
+- Optimized Regular Expressions.
 - Adding a method to change router password.
 - Option to change frequency 2.4 Ghz or 5 Ghz. 
 - Option to change router transmission power.
+- Formatting output.
 
 # Features implementation to be done:
 
