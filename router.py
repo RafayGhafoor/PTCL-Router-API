@@ -33,21 +33,9 @@ class Router(object):
         self.mac_address = []   # Devices Mac Address
         self.active_dev = []    # Active Devices on Wi-Fi
         self.mac_and_host = {}  # Mac Addresses and Hostnames
+        # self.sessionkey = sessionkey
     
-        
-    def login(self):
-        '''Logs into the router.'''
-        pass
-    
-    
-    def get_suspects(self):
-        '''
-        Searches suspected users who are currently connected
-        to the router.
-        '''
-        suspects = {"User 1": "Mac_Address"}
-    
-        
+            
     @staticmethod
     def scrape_page(url):
         '''Scrape given link and create a beautiful soup object'''
@@ -92,71 +80,76 @@ class Router(object):
                     count += 1
         print ''
 
-s = Router()
-s.show_active_dev()
+    
+    def get_sessionkey(self):
+        '''Gets session key from the html page'''
+        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd")
+        return re.search(r'\d{3,30}', r.text).group().encode('ascii')
     
     
-    # def get_sessionkey(self):
-    #     '''Gets session key from the html page'''
-    #     r, soup = scrape_page(self.mask + "wlmacflt.cmd")
-    #     return re.search(r'\d{3,30}', r.text).group().encode('ascii')
-    # 
-    # 
-    # def block_dev(self, devmac, sessionKey):
-    #     '''Block device using Mac Address.'''
-    #     r, soup = scrape_page(self.mask + "wlmacflt.cmd?action=add&wlFltMacAddr=%s&sessionKey=%s" % (devmac, sessionKey))
-    #     print "Blocked."
-    # 
-    # 
-    # def unblock_dev(self, udevmac, sessionKey):
-    #     '''Unblock device using Mac Address.'''
-    #     r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, sessionKey))
-    #     print "Unblocked."
-    #     
-    #     
-    # def hh_to_HH(self, time):
-    #     '''Converts 12 hours format to 24 hours.'''
-    #     pass
-    #     
-    #     
-    # def reboot_router(self, sessionKey):
-    #     '''Reboots Router.'''
-    #     r, soup = self.scrape_page(self.mask + "rebootinfo.cgi?sessionKey=%s") % SessionKey
-    #     print "Rebooted."
-    # 
-    # 
-    # def time_restriction(self):
-    #     '''Restricts user from using internet for limited time.''' 
-    #     pass
-    # 
-    # 
-    # def url_filter(self):
-    #     '''Block website temporarily/permanently (i.e Temporarily, when time is specified)'''
-    #     pass
-    #     
-    #     
-    # def url_remove_filter(self):
-    #     '''Removes url filter after specified time or when provided.'''
-    #     pass
-    # 
-    # 
-    # def monitor_dev(self): # Monitor Devices
-    #     '''Monitor devices, when they connect to router and disconnect. Also 
-    #     gets the time a device remains connected to the router.'''
-    #     pass
-    #     
-    #     
-    # def dev_conninfo(self):   # Device Connection Info
-    #     '''Analyzes how much time a device remains connected to the device throughout
-    #     the day.'''
-    #     pass
+    def block_dev(self, devmac, sessionKey):
+        '''Block device using Mac Address.'''
+        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=add&wlFltMacAddr=%s&sessionKey=%s" % (devmac, sessionKey))
+        print "Blocked."
+    
+    
+    def unblock_dev(self, udevmac, sessionKey):
+        '''Unblock device using Mac Address.'''
+        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, sessionKey))
+        print "Unblocked."
+        
+        
+    def hh_to_HH(self, time):
+        '''Converts 12 hours format to 24 hours.'''
+        pass
+        
+        
+    def reboot_router(self, sessionKey):
+        '''Reboots Router.'''
+        r, soup = self.scrape_page(self.mask + "rebootinfo.cgi?sessionKey=%s") % SessionKey
+        print "Rebooted."
+    
+    
+    def time_restriction(self):
+        '''Restricts user from using internet for limited time.''' 
+        pass
+    
+    
+    def url_filter(self):
+        '''Block website temporarily/permanently (i.e Temporarily, when time is specified)'''
+        pass
+        
+        
+    def url_remove_filter(self):
+        '''Removes url filter after specified time or when provided.'''
+        pass
+    
+    
+    def monitor_dev(self): # Monitor Devices
+        '''Monitor devices, when they connect to router and disconnect. Also 
+        gets the time a device remains connected to the router.'''
+        pass
+        
+        
+    def dev_conninfo(self):   # Device Connection Info
+        '''Analyzes how much time a device remains connected to the device throughout
+        the day.'''
+        pass
+    
+    
+    def login(self):
+        '''Logs into the router.'''
+        pass
+    
+    
+    def get_suspects(self):
+        '''
+        Searches suspected users who are currently connected
+        to the router.
+        '''
+        suspects = {"User 1": "Mac_Address"}
  
     
-# def main():
-#     '''functional code goes here.'''
-#     pass
-#     
-#     
 # qs = int(raw_input("1) To Block Mac Address: \n2) To Unblock Mac Address: \n3) Reboot Router: "))
 # 
 # if qs == 1:
