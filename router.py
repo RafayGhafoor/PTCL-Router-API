@@ -1,3 +1,16 @@
+'''
+A PTCL router class, which allows to interact with the router easily
+through terminal.
+
+Example:
+
+>>> from routerPTCL import Router
+>>> router = Router('192.168.1.1')
+>>> router.login()  # Logs in to the router
+>>> router.reboot() # Reboots router
+>>> router.active_dev() # Shows devices which are currently connected to the router
+'''
+
 import requests
 import bs4
 import re
@@ -5,37 +18,56 @@ import re
 # mymacs = {"Samsung Galaxy Tab": "5c:2e:59:4d:33:67"}
 
 class Router(object):
+    '''
+    A PTCL router class.
+    '''
     hostname_regex = re.compile(r"\w{3,10}")
     macAddress_regex = re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
 
 
-    def __init__(self, mask):
-        self.mask = mask
+    def __init__(self, mask="http://192.168.1.1", username="admin", password="admin"):
+        self.mask = mask + '/'
+        self.username = username
+        self.password = password
         self.dev_hostname = []  # Devices Hostname
         self.mac_address = []   # Devices Mac Address
         self.active_dev = []    # Active Devices on Wi-Fi
         self.mac_and_host = {}  # Mac Addresses and Hostnames
+    
         
+    def login(self):
+        '''Logs into the router.'''
+        pass
+    
+    
+    def get_suspects(self):
+        '''
+        Searches suspected users who are currently connected
+        to the router.
+        '''
+        suspects = {"User 1": "Mac_Address"}
+    
         
-    def scrape_page(self, link):
+    @staticmethod
+    def scrape_page(url):
         '''Scrape given link and create a beautiful soup object'''
-        request_url = requests.get(link, auth=('admin', 'admin'))
+        request_url = requests.get(url, auth=('admin', 'admin'))
         html_soup = bs4.BeautifulSoup(request_url.content, 'html.parser')
         return request_url, html_soup
     
     
     def get_dhcpinfo(self):
         '''Gets information from dhcp about the associated Mac Adresses and Hostnames.'''
-        r, soup = scrape_page('http://192.168.1.1/dhcpinfo.html')
+        r, soup = self.scrape_page(self.mask + 'dhcpinfo.html')
         count = 1
         for i, found in enumerate(soup.findAll('td'), 1):
             if i > 4:
                 if hostname_regex.search(found.text) != None and "hours" not in found.text\
                                                                 and "192" not in found.text:
-                    dev_hostname.append(found.text.encode('ascii'))
+                    self.dev_hostname.append(found.text.encode('ascii'))
                 elif macAddress_regex.search(found.text) != None and "hours" not in found.text\
                                                                     and "192" not in found.text:
-                    mac_address.append(found.text.encode('ascii'))
+                    self.mac_address.append(found.text.encode('ascii'))    
     
     
     def get_stationinfo(self):
@@ -75,7 +107,7 @@ class Router(object):
     
     def unblock_dev(self, udevmac, sessionKey):
         '''Unblock device using Mac Address.'''
-        r, soup = scrape_page("http://192.168.1.1/wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, sessionKey))
+        r, soup = self.scrape_page("http://192.168.1.1/wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, sessionKey))
         print "Unblocked."
         
         
@@ -86,7 +118,7 @@ class Router(object):
         
     def reboot_router(self, sessionKey):
         '''Reboots Router.'''
-        r, soup = scrape_page("http://192.168.1.1/rebootinfo.cgi?sessionKey=%s") % SessionKey
+        r, soup = self.scrape_page("http://192.168.1.1/rebootinfo.cgi?sessionKey=%s") % SessionKey
         print "Rebooted."
     
     
