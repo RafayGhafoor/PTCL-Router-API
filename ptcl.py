@@ -5,10 +5,10 @@ ptcl = Router()
 
 def main():
     parser = argparse.ArgumentParser(description="Control PTCL router from command-line.")
-    parser.add_argument('-b', '--block', help="Block device")
-    parser.add_argument('-u', '--unblock', help="Unblock device")
+    parser.add_argument('-b', '--block', help="Block device.")
+    parser.add_argument('-u', '--unblock', help="Unblock device.")
     parser.add_argument('-r', '--restart', help="Restart Router.")
-    parser.add_argument('-s', '--show', help='Show Active Devices.')
+    parser.add_argument('-s', '--show-dhcp', help='Show DHCP Info.', default='.')
     args = parser.parse_args()
     
     if args.block:
@@ -24,9 +24,8 @@ def main():
     elif args.restart:
         ptcl.reboot_router(get_sessionkey())
 
-    elif args.show:
-        print "Showing Active Devices"
-        ptcl.get_dhcpinfo()
+    elif args.show_dhcp == '.':
+        ptcl.show_dhcpinfo()
         
     else:
         print "Invalid Argument"

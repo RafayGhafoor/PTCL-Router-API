@@ -33,13 +33,12 @@ class Router(object):
         self.mac_address = []   # Devices Mac Address
         self.active_dev = []    # Active Devices on Wi-Fi
         self.mac_and_host = {}  # Mac Addresses and Hostnames
-        # self.sessionkey = sessionkey
 
 
     @staticmethod
     def scrape_page(url):
         '''Scrape given link and create a beautiful soup object'''
-        request_url = requests.get(url, auth=('admin', 'BB815'))
+        request_url = requests.get(url, auth=('admin', 'admin'))
         html_soup = bs4.BeautifulSoup(request_url.content, 'html.parser')
         return request_url, html_soup
 
@@ -47,21 +46,24 @@ class Router(object):
     def get_dhcpinfo(self):
         '''Gets information from dhcp about the associated Mac Adresses and Hostnames.'''
         r, soup = self.scrape_page(self.mask + 'dhcpinfo.html')
-        count = 1
-        for i, found in enumerate(soup.findAll('td'), 1):
-            if i > 4:
-                if self.hostname_regex.search(found.text) != None and "hours" not in found.text\
-                                                                and "192" not in found.text:
-                    self.dev_hostname.append(found.text.encode('ascii'))
-                elif self.macAddress_regex.search(found.text) != None and "hours" not in found.text\
-                                                                    and "192" not in found.text:
-                    self.mac_address.append(found.text.encode('ascii'))
+        s = soup.find(id="devInfoDhcpExpires")
+        for i, lines in enumerate(s.find_all_next("td"), 1):
+            if i == 2:
+                self.mac_address.append(lines.text.strip())
+                pass
+            elif i % 4 == 1 or i == 1:
+                self.dev_hostname.append(lines.text.strip())
+            elif i % 4 == 2:
+                self.mac_address.append(lines.text.strip())
 
 
     def show_dhcpinfo(self):
         self.get_dhcpinfo()
-        for i in zip(self.mac_address, self.dev_hostname):
-            print "[%s] with MacAddress: [%s] currently active." % (i[0], i[1])
+        print "-" * 20 + "DHCP-INFO" + "-" * 20 + '\n'
+        for num, i in enumerate(zip(self.dev_hostname, self.mac_address), 1):
+            whitespace = 30 - len(i[0])
+            print "[%s]%s\n" % (i[0], ' ' * whitespace + i[1])
+        print "-" * 49
 
 
     def get_stationinfo(self):
