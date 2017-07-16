@@ -8,7 +8,8 @@ def main():
     parser.add_argument('-b', '--block', help="Block device.")
     parser.add_argument('-u', '--unblock', help="Unblock device.")
     parser.add_argument('-r', '--restart', help="Restart Router.")
-    parser.add_argument('-s', '--show-dhcp', help='Show DHCP Info.', default='.')
+    parser.add_argument('-sd', '--show-dhcp', help='Show DHCP Info.', default='.')
+    parser.add_argument('-s', '--show-active', help='Show Active Devices.')
     args = parser.parse_args()
     
     if args.block:
@@ -23,6 +24,9 @@ def main():
         
     elif args.restart:
         ptcl.reboot_router(get_sessionkey())
+        
+    elif args.show_active:
+        ptcl.show_active_dev()
 
     elif args.show_dhcp == '.':
         ptcl.show_dhcpinfo()

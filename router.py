@@ -69,24 +69,23 @@ class Router(object):
     def get_stationinfo(self):
         '''Gets information about the connected devices'''
         r, soup = self.scrape_page(self.mask + "wlstationlist.cmd")
-        for found in soup.findAll('td'):
-            if "PTCL-BB" not in found.text and "Yes" not in found.text and "wl0" not in found.text\
-                                            and self.macAddress_regex.search(found.text.strip()) != None:
-                self.active_dev.append(found.text.strip().lower().encode('ascii'))
-
+        s = soup.find(id="wlstationlist7")
+        for i, lines in enumerate(s.find_all_next('td')):
+            if i % 5 == 0 or i == 0:
+                self.active_dev.append(lines.text.strip().lower().encode('ascii'))
+        
 
     def show_active_dev(self):
         '''Shows active devices (Mac Addresses) and their hostnames'''
         self.get_stationinfo()
         self.get_dhcpinfo()
         mac_host = dict(zip(self.dev_hostname, self.mac_address))
-        count = 1
+        print "-" * 20 + "STATION-INFO" + "-" * 20 + '\n'
         for k, v in mac_host.iteritems():
             for active_clients in self.active_dev:
                 if active_clients in v:
-                    print "%s) Hostname:%s | %s" % (count, k, active_clients.upper())
-                    count += 1
-        print ''
+                    print "%s%s\n" % (k + ":" + ' ' * (30 - len(k)), active_clients.upper())
+        print "-" * 52 + '\n'
 
 
     def get_sessionkey(self):
