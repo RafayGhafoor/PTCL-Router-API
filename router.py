@@ -34,16 +34,16 @@ class Router(object):
         self.active_dev = []    # Active Devices on Wi-Fi
         self.mac_and_host = {}  # Mac Addresses and Hostnames
         # self.sessionkey = sessionkey
-    
-            
+
+
     @staticmethod
     def scrape_page(url):
         '''Scrape given link and create a beautiful soup object'''
         request_url = requests.get(url, auth=('admin', 'BB815'))
         html_soup = bs4.BeautifulSoup(request_url.content, 'html.parser')
         return request_url, html_soup
-    
-    
+
+
     def get_dhcpinfo(self):
         '''Gets information from dhcp about the associated Mac Adresses and Hostnames.'''
         r, soup = self.scrape_page(self.mask + 'dhcpinfo.html')
@@ -55,10 +55,15 @@ class Router(object):
                     self.dev_hostname.append(found.text.encode('ascii'))
                 elif self.macAddress_regex.search(found.text) != None and "hours" not in found.text\
                                                                     and "192" not in found.text:
-                    self.mac_address.append(found.text.encode('ascii'))    
-        # For Debugging purpose
+                    self.mac_address.append(found.text.encode('ascii'))
+
+
+    def show_dhcpinfo(self):
+        self.get_dhcpinfo()
         for i in zip(self.mac_address, self.dev_hostname):
             print "[%s] with MacAddress: [%s] currently active." % (i[0], i[1])
+
+
     def get_stationinfo(self):
         '''Gets information about the connected devices'''
         r, soup = self.scrape_page(self.mask + "wlstationlist.cmd")
@@ -66,8 +71,8 @@ class Router(object):
             if "PTCL-BB" not in found.text and "Yes" not in found.text and "wl0" not in found.text\
                                             and self.macAddress_regex.search(found.text.strip()) != None:
                 self.active_dev.append(found.text.strip().lower().encode('ascii'))
-    
-    
+
+
     def show_active_dev(self):
         '''Shows active devices (Mac Addresses) and their hostnames'''
         self.get_stationinfo()
@@ -81,74 +86,71 @@ class Router(object):
                     count += 1
         print ''
 
-    
+
     def get_sessionkey(self):
         '''Gets session key from the html page'''
         r, soup = self.scrape_page(self.mask + "wlmacflt.cmd")
         return re.search(r'\d{3,30}', r.text).group().encode('ascii')
-    
-    
+
+
     def block_dev(self, devmac, sessionKey):
         '''Block device using Mac Address.'''
         r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=add&wlFltMacAddr=%s&sessionKey=%s" % (devmac, sessionKey))
         print "Blocked."
-    
-    
+
+
     def unblock_dev(self, udevmac, sessionKey):
         '''Unblock device using Mac Address.'''
         r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, sessionKey))
         print "Unblocked."
-        
-        
+
+
     def hh_to_HH(self, time):
         '''Converts 12 hours format to 24 hours.'''
         pass
-        
-        
+
+
     def reboot_router(self, sessionKey):
         '''Reboots Router.'''
         r, soup = self.scrape_page(self.mask + "rebootinfo.cgi?sessionKey=%s") % SessionKey
         print "Rebooted."
-    
-    
+
+
     def time_restriction(self):
-        '''Restricts user from using internet for limited time.''' 
+        '''Restricts user from using internet for limited time.'''
         pass
-    
-    
+
+
     def url_filter(self):
         '''Block website temporarily/permanently (i.e Temporarily, when time is specified)'''
         pass
-        
-        
+
+
     def url_remove_filter(self):
         '''Removes url filter after specified time or when provided.'''
         pass
-    
-    
+
+
     def monitor_dev(self): # Monitor Devices
-        '''Monitor devices, when they connect to router and disconnect. Also 
+        '''Monitor devices, when they connect to router and disconnect. Also
         gets the time a device remains connected to the router.'''
         pass
-        
-        
+
+
     def dev_conninfo(self):   # Device Connection Info
         '''Analyzes how much time a device remains connected to the device throughout
         the day.'''
         pass
-    
-    
+
+
     def login(self):
         '''Logs into the router.'''
         pass
-    
-    
+
+
     def get_suspects(self):
         '''
         Searches suspected users who are currently connected
         to the router.
         '''
         suspects = {"User 1": "Mac_Address"}
- 
-    
-
