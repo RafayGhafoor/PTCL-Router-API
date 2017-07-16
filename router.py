@@ -33,13 +33,13 @@ class Router(object):
         self.mac_address = []   # Devices Mac Address
         self.active_dev = []    # Active Devices on Wi-Fi
         self.mac_and_host = {}  # Mac Addresses and Hostnames
-        # self.sessionkey = sessionkey
+        self.session = requests.Session()
+        self.session.auth = (self.username, self.password)
 
 
-    @staticmethod
-    def scrape_page(url):
+    def scrape_page(self, url):
         '''Scrape given link and create a beautiful soup object'''
-        request_url = requests.get(url, auth=('admin', 'BB815'))
+        request_url = self.session.get(url)
         html_soup = bs4.BeautifulSoup(request_url.content, 'html.parser')
         return request_url, html_soup
 
