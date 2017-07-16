@@ -39,7 +39,7 @@ class Router(object):
     @staticmethod
     def scrape_page(url):
         '''Scrape given link and create a beautiful soup object'''
-        request_url = requests.get(url, auth=('admin', 'admin'))
+        request_url = requests.get(url, auth=('admin', 'BB815'))
         html_soup = bs4.BeautifulSoup(request_url.content, 'html.parser')
         return request_url, html_soup
     
@@ -56,8 +56,9 @@ class Router(object):
                 elif self.macAddress_regex.search(found.text) != None and "hours" not in found.text\
                                                                     and "192" not in found.text:
                     self.mac_address.append(found.text.encode('ascii'))    
-    
-    
+        # For Debugging purpose
+        for i in zip(self.mac_address, self.dev_hostname):
+            print "[%s] with MacAddress: [%s] currently active." % (i[0], i[1])
     def get_stationinfo(self):
         '''Gets information about the connected devices'''
         r, soup = self.scrape_page(self.mask + "wlstationlist.cmd")
