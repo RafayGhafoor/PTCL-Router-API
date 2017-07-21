@@ -48,20 +48,28 @@ class Router(object):
         '''Gets information from dhcp about the associated Mac Adresses and Hostnames.'''
         r, soup = self.scrape_page(self.mask + 'dhcpinfo.html')
         count = 1
-        for i, found in enumerate(soup.findAll('td'), 1):
-            if i > 4:
-                if self.hostname_regex.search(found.text) != None and "hours" not in found.text\
-                                                                and "192" not in found.text:
-                    self.dev_hostname.append(found.text.encode('ascii'))
-                elif self.macAddress_regex.search(found.text) != None and "hours" not in found.text\
-                                                                    and "192" not in found.text:
-                    self.mac_address.append(found.text.encode('ascii'))
+        td = soup.findAll('td')
+        # for i in td:
+        #     print "%r" %i
+        for i in td:
+            if self.macAddress_regex.search(i.text):
+                self.dev_hostname.append(td[td.index(i) - 1].text.encode('ascii'))
+                self.mac_address.append(i.text.encode('ascii'))
+
+        # for i, found in enumerate(soup.findAll('td'), 1):
+        #     if i > 4:
+        #         if self.hostname_regex.search(found.text) != None and "hours" not in found.text\
+        #                                                         and "192" not in found.text:
+        #             self.dev_hostname.append(found.text.encode('ascii'))
+        #         elif self.macAddress_regex.search(found.text) != None and "hours" not in found.text\
+        #                                                             and "192" not in found.text:
+        #             self.mac_address.append(found.text.encode('ascii'))
 
 
     def show_dhcpinfo(self):
         self.get_dhcpinfo()
         for i in zip(self.mac_address, self.dev_hostname):
-            print "[%s] with MacAddress: [%s] currently active." % (i[0], i[1])
+            print "%s: %s" % (i[0].upper(), i[1].lower().capitalize())
 
 
     def get_stationinfo(self):
@@ -78,13 +86,13 @@ class Router(object):
         self.get_stationinfo()
         self.get_dhcpinfo()
         mac_host = dict(zip(self.dev_hostname, self.mac_address))
-        count = 1
+        print "-" * 20 + "STATION-INFO" + "-" * 20 + '\n'
         for k, v in mac_host.iteritems():
-            for active_clients in self.active_dev:
+            for i, active_clients in enumerate(self.active_dev):
                 if active_clients in v:
-                    print "%s) Hostname:%s | %s" % (count, k, active_clients.upper())
-                    count += 1
-        print ''
+                    print "(%s) %s%s\n" % (i, k + ":" + ' ' * (30 - len(k)), active_clients.upper())
+        print "-" * 52 + '\n'
+
 
 
     def get_sessionkey(self):
