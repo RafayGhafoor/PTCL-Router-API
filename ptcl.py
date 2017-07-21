@@ -13,23 +13,23 @@ def main():
     args = parser.parse_args()
 
     if args.block:
-        ptcl.show_active_dev()
-        dev_mac = raw_input("Please Enter Device Mac Address: ").upper()
-        ptcl.block_dev(dev_mac, get_sessionkey())
+        name = ptcl.show_active_dev()
+        dev_mac = int(raw_input("Please Enter Device Number: ")) - 1
+        ptcl.block_dev(ptcl.mac_and_host[name[dev_mac]], ptcl.get_sessionkey())
 
     elif args.unblock:
         ptcl.show_active_dev()
-        udev_mac = raw_input("Please Enter Device Mac Address: ").upper()
-        ptcl.unblock_dev(udev_mac, get_sessionkey())
+        udev_mac = raw_input("Please Enter Device Number: ").upper()
+        ptcl.unblock_dev(ptcl.mac_and_host[name[udev_mac]], ptcl.get_sessionkey())
 
     elif args.restart:
-        ptcl.reboot_router(get_sessionkey())
+        ptcl.reboot_router(ptcl.get_sessionkey())
+
+    elif args.show_dhcp:
+        ptcl.show_dhcpinfo()
 
     elif args.show_active:
         ptcl.show_active_dev()
-
-    elif args.show_dhcp == '.':
-        ptcl.show_dhcpinfo()
 
     else:
         print "Invalid Argument"

@@ -6,9 +6,8 @@ Example:
 
 >>> from routerPTCL import Router
 >>> router = Router('192.168.1.1')
->>> router.login()  # Logs in to the router
 >>> router.reboot() # Reboots router
->>> router.self.active_dev() # Shows devices which are currently connected to the router
+>>> router.active_dev() # Shows devices which are currently connected to the router
 '''
 
 import requests
@@ -21,7 +20,6 @@ class Router(object):
     '''
     A PTCL router class.
     '''
-    hostname_regex = re.compile(r"\w{3,10}")
     macAddress_regex = re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
 
 
@@ -53,6 +51,14 @@ class Router(object):
         #     print "%r" %i
         for i in td:
             if self.macAddress_regex.search(i.text):
+                '''
+                The HTML page contains hostnames and mac addresses right next
+                to each other in the form of table. We search in the tables list
+                (td) until a mac address is found, then appends it to the
+                mac_address list. The hostname is located before it so by using
+                index less than the current index of mac address, we obtain the
+                hostname and append it to the dev_hostname list.
+                '''
                 self.dev_hostname.append(td[td.index(i) - 1].text.encode('ascii'))
                 self.mac_address.append(i.text.encode('ascii'))
 
@@ -68,8 +74,11 @@ class Router(object):
 
     def show_dhcpinfo(self):
         self.get_dhcpinfo()
-        for i in zip(self.mac_address, self.dev_hostname):
-            print "%s: %s" % (i[0].upper(), i[1].lower().capitalize())
+        print "-" * 20 + "DHCP-INFO" + "-" * 20 + '\n'
+        for num, i in enumerate(zip(self.dev_hostname, self.mac_address), 1):
+            whitespace = 30 - len(i[0])
+            print "%s:%s\n" % (i[0], ' ' * whitespace + i[1].upper())
+        print "-" * 49
 
 
     def get_stationinfo(self):
@@ -85,14 +94,18 @@ class Router(object):
         '''Shows active devices (Mac Addresses) and their hostnames'''
         self.get_stationinfo()
         self.get_dhcpinfo()
-        mac_host = dict(zip(self.dev_hostname, self.mac_address))
+        self.mac_and_host = dict(zip(self.dev_hostname, self.mac_address))
+        hostnames = []
         print "-" * 20 + "STATION-INFO" + "-" * 20 + '\n'
-        for k, v in mac_host.iteritems():
-            for i, active_clients in enumerate(self.active_dev):
+        count = 1
+        for k, v in self.mac_and_host.iteritems():
+            for active_clients in self.active_dev:
                 if active_clients in v:
-                    print "(%s) %s%s\n" % (i, k + ":" + ' ' * (30 - len(k)), active_clients.upper())
+                    print "(%s) %s%s\n" % (count, k + ":" + ' ' * (30 - len(k)), active_clients.upper())
+                    hostnames.append(k)
+                    count += 1
         print "-" * 52 + '\n'
-
+        return hostnames
 
 
     def get_sessionkey(self):
@@ -139,6 +152,20 @@ class Router(object):
         pass
 
 
+class Monitor(Router):
+    '''
+    Monitor class derived from the router, which contains method for
+    monitoring users connected to router.
+    '''
+
+    def get_suspects(self):
+        '''
+        Searches suspected users who are currently connected
+        to the router.
+        '''
+        suspects = {"User 1": "Mac_Address"} # Sample
+
+
     def monitor_dev(self): # Monitor Devices
         '''Monitor devices, when they connect to router and disconnect. Also
         gets the time a device remains connected to the router.'''
@@ -149,16 +176,3 @@ class Router(object):
         '''Analyzes how much time a device remains connected to the device throughout
         the day.'''
         pass
-
-
-    def login(self):
-        '''Logs into the router.'''
-        pass
-
-
-    def get_suspects(self):
-        '''
-        Searches suspected users who are currently connected
-        to the router.
-        '''
-        suspects = {"User 1": "Mac_Address"}
