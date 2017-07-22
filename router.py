@@ -13,8 +13,9 @@ Example:
 import requests
 import bs4
 import re
+import sys
 
-# mymacs = {"Samsung Galaxy Tab": "5c:2e:59:4d:33:67"}
+mymacs = {"Samsung Galaxy Tab": "5c:2e:59:4d:33:67", "Ahmer": "68:94:23:AC:59:51", "Asad": "A0:32:99:AB:33:31"}
 
 class Router(object):
     '''
@@ -37,9 +38,13 @@ class Router(object):
 
     def scrape_page(self, url):
         '''Scrape given link and create a beautiful soup object'''
-        request_url = self.session.get(url)
-        html_soup = bs4.BeautifulSoup(request_url.content, 'html.parser')
-        return request_url, html_soup
+        try:
+            request_url = self.session.get(url)
+            html_soup = bs4.BeautifulSoup(request_url.content, 'html.parser')
+            return request_url, html_soup
+        except requests.exceptions.ConnectionError:
+            print "Internet Connection Down.\nExiting..."
+            sys.exit()
 
 
     def get_dhcpinfo(self):
@@ -47,8 +52,6 @@ class Router(object):
         r, soup = self.scrape_page(self.mask + 'dhcpinfo.html')
         count = 1
         td = soup.findAll('td')
-        # for i in td:
-        #     print "%r" %i
         for i in td:
             if self.macAddress_regex.search(i.text):
                 '''
@@ -61,15 +64,6 @@ class Router(object):
                 '''
                 self.dev_hostname.append(td[td.index(i) - 1].text.encode('ascii'))
                 self.mac_address.append(i.text.encode('ascii'))
-
-        # for i, found in enumerate(soup.findAll('td'), 1):
-        #     if i > 4:
-        #         if self.hostname_regex.search(found.text) != None and "hours" not in found.text\
-        #                                                         and "192" not in found.text:
-        #             self.dev_hostname.append(found.text.encode('ascii'))
-        #         elif self.macAddress_regex.search(found.text) != None and "hours" not in found.text\
-        #                                                             and "192" not in found.text:
-        #             self.mac_address.append(found.text.encode('ascii'))
 
 
     def show_dhcpinfo(self):
@@ -84,6 +78,9 @@ class Router(object):
     def get_stationinfo(self):
         '''Gets information about the connected devices'''
         r, soup = self.scrape_page(self.mask + "wlstationlist.cmd")
+        td = soup.findAll('td')
+        for i in td:
+            pass
         for found in soup.findAll('td'):
             if "PTCL-BB" not in found.text and "Yes" not in found.text and "wl0" not in found.text\
                                             and self.macAddress_regex.search(found.text.strip()) != None:
@@ -101,11 +98,23 @@ class Router(object):
         for k, v in self.mac_and_host.iteritems():
             for active_clients in self.active_dev:
                 if active_clients in v:
-                    print "(%s) %s%s\n" % (count, k + ":" + ' ' * (30 - len(k)), active_clients.upper())
+                    print "(%s) %s%s\n" % (count, k + ":" + ' ' * (30 - len(k) - len(str(count))), active_clients.upper())
                     hostnames.append(k)
                     count += 1
         print "-" * 52 + '\n'
         return hostnames
+
+
+    def get_active_num(self):
+        '''
+        Gets Current Active Devices Number.
+        '''
+        def exclude_android_dev(self):
+            '''
+            Excludes android devices from the list of active devices.
+            '''
+            pass
+        pass
 
 
     def get_sessionkey(self):
@@ -131,9 +140,9 @@ class Router(object):
         pass
 
 
-    def reboot_router(self, sessionKey):
+    def reboot_router(self, SessionKey):
         '''Reboots Router.'''
-        r, soup = self.scrape_page(self.mask + "rebootinfo.cgi?sessionKey=%s") % SessionKey
+        r, soup = self.scrape_page(self.mask + "rebootinfo.cgi?sessionKey=%s") % self.SessionKey
         print "Rebooted."
 
 
