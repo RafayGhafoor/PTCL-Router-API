@@ -7,9 +7,15 @@ def main():
     parser = argparse.ArgumentParser(description="Control PTCL router from command-line.")
     parser.add_argument('-b', '--block', help="Block device.")
     parser.add_argument('-u', '--unblock', help="Unblock device.")
+<<<<<<< HEAD
     parser.add_argument('-r', '--restart', help="Restart Router.", action='store_true')
     parser.add_argument('-sd', '--show-dhcp', help='Show DHCP Info.', action='store_true')
     parser.add_argument('-s', '--show-active', help='Show Active Devices.', default='.')
+=======
+    parser.add_argument('-r', '--restart', help="Restart Router.")
+    parser.add_argument('-sd', '--show-dhcp', help='Show DHCP Info.', default='.')
+    parser.add_argument('-s', '--show-active', help='Show Active Devices.')
+>>>>>>> origin
     args = parser.parse_args()
 
     if args.block:
@@ -23,6 +29,7 @@ def main():
         ptcl.unblock_dev(ptcl.mac_and_host[name[udev_mac]], ptcl.get_sessionkey())
 
     elif args.restart:
+<<<<<<< HEAD
         ptcl.reboot_router(ptcl.get_sessionkey())
 
     elif args.show_dhcp:
@@ -31,6 +38,16 @@ def main():
     elif args.show_active == '.':
         ptcl.show_active_dev()
 
+=======
+        ptcl.reboot_router(get_sessionkey())
+        
+    elif args.show_active:
+        ptcl.show_active_dev()
+
+    elif args.show_dhcp == '.':
+        ptcl.show_dhcpinfo()
+        
+>>>>>>> origin
     else:
         print "Invalid Argument"
 
