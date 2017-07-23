@@ -9,7 +9,6 @@ Example:
 >>> router.reboot() # Reboots router
 >>> router.active_dev() # Shows devices which are currently connected to the router
 '''
-
 import requests
 import bs4
 import re
@@ -44,7 +43,9 @@ class Router(object):
 
 
     def scrape_page(self, url):
-        '''Scrape given link and create a beautiful soup object'''
+        '''
+        Scrape given link and create a beautiful soup object.
+        '''
         try:
             request_url = self.session.get(url)
             html_soup = bs4.BeautifulSoup(request_url.content, 'html.parser')
@@ -54,8 +55,16 @@ class Router(object):
             sys.exit()
 
 
+    def get_sessionkey(self):
+        '''
+        Gets session key from the html page.
+        '''
+        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd")
+        self.session_key= re.search(r'\d{3,30}', r.content).group().encode('ascii')
+
+
     def get_dhcpinfo(self):
-        '''Gets information from dhcp about the associated Mac Adresses and Hostnames.'''
+        '''Gets information from dhcp i.e., Mac Adresses and Hostnames.'''
         r, soup = self.scrape_page(self.mask + 'dhcpinfo.html')
         count = 1
         td = soup.findAll('td')
@@ -74,6 +83,7 @@ class Router(object):
 
 
     def show_dhcpinfo(self):
+        '''Shows DHCP information.'''
         self.get_dhcpinfo()
         print "-" * 20 + "DHCP-INFO" + "-" * 20 + '\n'
         for num, i in enumerate(zip(self.dev_hostname, self.mac_address), 1):
@@ -83,16 +93,20 @@ class Router(object):
 
 
     def get_stationinfo(self):
-        '''Gets information about the connected devices'''
+        '''
+        Gets information about the connected devices.
+        '''
         r, soup = self.scrape_page(self.mask + "wlstationlist.cmd")
         td = soup.findAll('td')
         for i in soup.findAll('td'):
-            if self.mac_adr_regex.search(i):
+            if self.mac_adr_regex.search(i.text.strip()):
                 self.active_dev.append(i.text.strip().lower().encode('ascii'))
 
 
     def show_active_dev(self):
-        '''Shows active devices (Mac Addresses) and their hostnames'''
+        '''
+        Shows active devices (Mac Addresses) and their hostnames.
+        '''
         self.get_stationinfo()
         self.get_dhcpinfo()
         self.mac_and_host = dict(zip(self.dev_hostname, self.mac_address))
@@ -109,59 +123,63 @@ class Router(object):
         return hostnames
 
 
-    def get_active_num(self):
+    def block_dev(self, devmac):
         '''
-        Gets Current Active Devices Number.
+        Block device using Mac Address.
         '''
-        def exclude_android_dev(self):
-            '''
-            Excludes android devices from the list of active devices.
-            '''
-            pass
-        pass
-
-
-    def get_sessionkey(self):
-        '''Gets session key from the html page'''
-        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd")
-        self.session_key= re.search(r'\d{3,30}', r.text).group().encode('ascii')
-
-
-    def block_dev(self, devmac, sessionKey):
-        '''Block device using Mac Address.'''
-        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=add&wlFltMacAddr=%s&sessionKey=%s" % (devmac, sessionKey))
+        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=add&wlFltMacAddr=%s&sessionKey=%s" % (devmac, self.session_key))
         print "Blocked."
 
 
-    def unblock_dev(self, udevmac, sessionKey):
-        '''Unblock device using Mac Address.'''
-        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, sessionKey))
+    def unblock_dev(self, udevmac):
+        '''
+        Unblock device using Mac Address.
+        '''
+        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, self.session_key))
         print "Unblocked."
 
 
     def hh_to_HH(self, time):
-        '''Converts 12 hours format to 24 hours.'''
+        '''
+        Converts 12 hours format to 24 hours.
+        '''
         pass
 
 
-    def reboot_router(self, SessionKey):
-        '''Reboots Router.'''
-        r, soup = self.scrape_page(self.mask + "rebootinfo.cgi?sessionKey=%s") % self.SessionKey
+    def reboot_router(self):
+        '''
+        Reboots Router.
+        '''
+        self.get_stationinfo()
+        r, soup = self.scrape_page(self.mask + ("rebootinfo.cgi?sessionKey=%s") % self.session_key)
         print "Rebooted."
 
 
     def time_restriction(self):
-        '''Restricts user from using internet for limited time.'''
+        '''
+        Restricts user from using internet for limited time.
+        '''
         pass
 
 
     def url_filter(self):
-        '''Block website temporarily/permanently (i.e Temporarily, when time is specified)'''
+        '''
+        Block website temporarily/permanently (i.e Temporarily, when time is specified).
+        '''
         pass
 
 
     def url_remove_filter(self):
-        '''Removes url filter after specified time or when provided.'''
+        '''
+        Removes url filter after specified time or when provided.
+        '''
+        pass
+
+
+    def change_passwd(self):
+        '''
+        Change the password of the router.
+        '''
         pass
 
 
