@@ -1,6 +1,11 @@
-# PTCL-Router-Configure:
+# PTCL-Router:
 
-Allows to configure and access options of PTCL router from commandline. Currently allows to get station info, dhcp info, block devices by mac addresses and unblock them.
+A CLI-script which allows to obtain information and configure PTCL router settings from commandline. 
 
+# Current-Features:
+
+- Obtain station information, showing their hostnames alongside for better readability (devices currently connected to the router).
+- Obtain DHCP information.
+- Block and unblock devices using their mac addresses.
 
 
