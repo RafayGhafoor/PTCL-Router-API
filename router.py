@@ -15,13 +15,19 @@ import bs4
 import re
 import sys
 
-mymacs = {"Samsung Galaxy Tab": "5c:2e:59:4d:33:67", "Ahmer": "68:94:23:AC:59:51", "Asad": "A0:32:99:AB:33:31"}
+mymacs = {
+        "Samsung Galaxy Tab": "5c:2e:59:4d:33:67",
+        "Ahmer": "68:94:23:AC:59:51",
+        "Asad": "A0:32:99:AB:33:31",
+        "HP-i5": "44-1C-A8-73-A3-17"
+        }
+
 
 class Router(object):
     '''
     A PTCL router class.
     '''
-    macAddress_regex = re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
+    mac_adr_regex = re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
 
 
     def __init__(self, mask="http://192.168.1.1", username="admin", password="admin"):
@@ -53,7 +59,7 @@ class Router(object):
         count = 1
         td = soup.findAll('td')
         for i in td:
-            if self.macAddress_regex.search(i.text):
+            if self.mac_adr_regex.search(i.text):
                 '''
                 The HTML page contains hostnames and mac addresses right next
                 to each other in the form of table. We search in the tables list
@@ -83,7 +89,7 @@ class Router(object):
             pass
         for found in soup.findAll('td'):
             if "PTCL-BB" not in found.text and "Yes" not in found.text and "wl0" not in found.text\
-                                            and self.macAddress_regex.search(found.text.strip()) != None:
+                                            and self.mac_adr_regex.search(found.text.strip()) != None:
                 self.active_dev.append(found.text.strip().lower().encode('ascii'))
 
 
