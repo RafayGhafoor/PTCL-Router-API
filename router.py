@@ -40,6 +40,7 @@ class Router(object):
         self.mac_and_host = {}  # Mac Addresses and Hostnames
         self.session = requests.Session()
         self.session.auth = (self.username, self.password)
+        self.session_key = ""
 
 
     def scrape_page(self, url):
@@ -85,12 +86,9 @@ class Router(object):
         '''Gets information about the connected devices'''
         r, soup = self.scrape_page(self.mask + "wlstationlist.cmd")
         td = soup.findAll('td')
-        for i in td:
-            pass
-        for found in soup.findAll('td'):
-            if "PTCL-BB" not in found.text and "Yes" not in found.text and "wl0" not in found.text\
-                                            and self.mac_adr_regex.search(found.text.strip()) != None:
-                self.active_dev.append(found.text.strip().lower().encode('ascii'))
+        for i in soup.findAll('td'):
+            if self.mac_adr_regex.search(i):
+                self.active_dev.append(i.text.strip().lower().encode('ascii'))
 
 
     def show_active_dev(self):
@@ -126,7 +124,7 @@ class Router(object):
     def get_sessionkey(self):
         '''Gets session key from the html page'''
         r, soup = self.scrape_page(self.mask + "wlmacflt.cmd")
-        return re.search(r'\d{3,30}', r.text).group().encode('ascii')
+        self.session_key= re.search(r'\d{3,30}', r.text).group().encode('ascii')
 
 
     def block_dev(self, devmac, sessionKey):
