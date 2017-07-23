@@ -14,13 +14,6 @@ import bs4
 import re
 import sys
 
-mymacs = {
-        "Samsung Galaxy Tab": "5c:2e:59:4d:33:67",
-        "Ahmer": "68:94:23:AC:59:51",
-        "Asad": "A0:32:99:AB:33:31",
-        "HP-i5": "44-1C-A8-73-A3-17"
-        }
-
 
 class Router(object):
     '''
@@ -128,7 +121,6 @@ class Router(object):
         Block device using Mac Address.
         '''
         r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=add&wlFltMacAddr=%s&sessionKey=%s" % (devmac, self.session_key))
-        print "Blocked."
 
 
     def unblock_dev(self, udevmac):
@@ -136,7 +128,6 @@ class Router(object):
         Unblock device using Mac Address.
         '''
         r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, self.session_key))
-        print "Unblocked."
 
 
     def hh_to_HH(self, time):
