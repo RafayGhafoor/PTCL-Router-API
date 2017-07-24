@@ -8,8 +8,19 @@ A CLI-script which allows to obtain information and configure PTCL router settin
 - Obtain DHCP information.
 - Block and unblock devices using their mac addresses.
 
+# Usage:
+
+```python
+python ptcl.py
+``` --> Shows devices connected to the router.
+```python 
+python ptcl.py -b``` --> Shows currently active devices and provides an option to block device from the display.
+```python
+python ptcl.py -sd``` --> Shows DHCP info for all devices connected in a day.
+
 # TODO:
 
+- Writing better documentation.
 - Optimize Regular Expressions.
 - Adding a method to change router password.
 - Option to change frequency 2.4 Ghz or 5 Ghz. 
