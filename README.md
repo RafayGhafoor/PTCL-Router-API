@@ -9,16 +9,21 @@ A CLI-script which allows to obtain information and configure PTCL router settin
 - Block and unblock devices using their mac addresses.
 
 # Usage:
---> Shows devices connected to the router.
+
+**Shows devices connected to the router.**
+
 ```python
-python ptcl.py
-``` 
---> Shows currently active devices and provides an option to block device from the display.
+>>> python ptcl.py``` 
+
+**Shows currently active devices and provides an option to block device from the display.**
+
 ```python 
-python ptcl.py -b``` 
---> Shows DHCP info for all devices connected in a day.
+>>> python ptcl.py -b``` 
+
+**Shows DHCP info for all devices connected in a day.**
+
 ```python
-python ptcl.py -sd```
+>>> python ptcl.py -sd```
 
 # TODO:
 
