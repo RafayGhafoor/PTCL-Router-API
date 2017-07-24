@@ -7,6 +7,12 @@ A CLI-script which allows to obtain information and configure PTCL router settin
 - Obtain station information, showing their hostnames alongside for better readability (devices currently connected to the router).
 - Obtain DHCP information.
 - Block and unblock devices using their mac addresses.
+- Block and unblock devices using their aliases/nicknames predefined. 
+For example:
+```python
+>>> python ptcl.py -b John
+```
+will block the user John off the network.
 
 # Usage:
 
@@ -36,6 +42,7 @@ A CLI-script which allows to obtain information and configure PTCL router settin
 - Option to change frequency 2.4 Ghz or 5 Ghz. 
 - Option to change router transmission power.
 - Formatting output.
+- Testing on other routers from the same vendor.
 
 # Features implementation to be done:
 
