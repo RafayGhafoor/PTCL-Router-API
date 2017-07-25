@@ -80,8 +80,8 @@ class Router(object):
         self.get_dhcpinfo()
         print "-" * 20 + "DHCP-INFO" + "-" * 20 + '\n'
         for num, i in enumerate(zip(self.dev_hostname, self.mac_address), 1):
-            whitespace = 30 - len(i[0])
-            print "%s:%s\n" % (i[0], ' ' * whitespace + i[1].upper())
+            whitespace = 30 - len(i[0]) - len(str(num))
+            print "(%s) %s:%s\n" % (num, i[0], ' ' * whitespace + i[1].upper())
         print "-" * 49
 
 
@@ -128,6 +128,14 @@ class Router(object):
         Unblock device using Mac Address.
         '''
         r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, self.session_key))
+
+
+    def show_blocked_dev(self):
+        pass
+
+
+    def set_hostname(self):
+        pass
 
 
     def hh_to_HH(self, time):
