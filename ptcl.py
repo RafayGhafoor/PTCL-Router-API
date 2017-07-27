@@ -13,18 +13,19 @@ my_macs = {
         }
 
 ptcl = Router()
+# ptcl = Router(mask='192.168.10.1', password='bec10')
 
 
 def main():
     parser = argparse.ArgumentParser(description="Control PTCL router from command-line.")
-    parser.add_argument('-b', '--block', help="Block device.", default='.')
+    parser.add_argument('-b', '--block', help="Block device.", nargs='?')
     parser.add_argument('-u', '--unblock', help="Unblock device.", nargs='?')
     parser.add_argument('-a', '--active-devices', help="Gets active devices number.", action='store_true')
     parser.add_argument('-r', '--restart', help="Restart Router.", action='store_true')
     parser.add_argument('-sd', '--show-dhcp', help='Show DHCP Info.', action='store_true')
     parser.add_argument('-s', '--show-active', help='Show Active Devices.', default='.')
+    parser.add_argument('-c', '--configure', help='Configure router settings.')
     args = parser.parse_args()
-    print args
     if args.block:
         print "Calling blocker Function"
         ptcl.get_sessionkey()
@@ -66,7 +67,7 @@ def main():
 
     elif args.show_dhcp:
         print "Calling DHCP_info Function"
-        ptcl.get_sessionkey()
+        # ptcl.get_sessionkey()
         ptcl.show_dhcpinfo()
 
     elif args.show_active == '.':

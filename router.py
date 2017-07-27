@@ -22,8 +22,8 @@ class Router(object):
     mac_adr_regex = re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
 
 
-    def __init__(self, mask="http://192.168.1.1", username="admin", password="admin"):
-        self.mask = mask + '/'
+    def __init__(self, mask="192.168.1.1", username="admin", password="admin"):
+        self.mask = "http://" + mask + '/'
         self.username = username
         self.password = password
         self.dev_hostname = []  # Devices Hostname
