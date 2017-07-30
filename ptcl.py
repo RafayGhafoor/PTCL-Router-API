@@ -1,5 +1,6 @@
 from router import Router
 import argparse
+import sys
 my_macs = {
         "mytab": "5c:2e:59:4d:33:67",
         "ahmer": "68:94:23:AC:59:51",
@@ -25,31 +26,44 @@ def main():
     parser.add_argument('-sd', '--show-dhcp', help='Show DHCP Info.', action='store_true')
     parser.add_argument('-s', '--show-active', help='Show Active Devices.', default='.')
     parser.add_argument('-c', '--configure', help='Configure router settings.')
+    parser.add_argument('-q', '--quiet', help='Quite mode.', nargs='?', default='True')
     args = parser.parse_args()
-    if args.block:
-        print "Calling blocker Function"
-        ptcl.get_sessionkey()
-        if args.block in my_macs.iterkeys():
-            print "Calling blocker Function"
-            ptcl.block_dev(my_macs[args.block.lower()])
-            print "%s has been blocked." % args.block.capitalize()
+    # print args
 
-        elif not args.block:
+    if args.quiet == 'True':
+        if args.block:
             print "Calling blocker Function"
+            ptcl.get_sessionkey()
+            if args.block in my_macs.iterkeys():
+                print "Calling blocker function - AUTOMATED MODE."
+                ptcl.block_dev(my_macs[args.block.lower()])
+                print "%s has been blocked." % args.block.capitalize()
+                if args.block not in my_macs.iterkeys():
+                    print "User not found."
+            elif args.block not in my_macs.iterkeys():
+                print "User not found."
+
+        elif args.unblock:
+            ptcl.get_sessionkey()
+            if args.unblock in my_macs.iterkeys():
+                print "Calling unblocker function - AUTOMATED MODE"
+                ptcl.unblock_dev(my_macs[args.unblock.lower()])
+                print "%s has been unblocked." % args.unblock.capitalize()
+            elif args.unblock not in my_macs.iterkeys():
+                print "User not found."
+
+
+    elif not args.quiet:
+        if not args.block:
+            print "Calling blocker function - CLI MODE."
             name = ptcl.show_active_dev()
             dev_mac = int(raw_input("Please Enter Device Number: ")) - 1
             ptcl.block_dev(ptcl.mac_and_host[name[dev_mac]])
             print "%s has been blocked." % name[dev_mac].capitalize()
 
-    elif args.unblock:
-        print "Calling Unblocker Function"
-        ptcl.get_sessionkey()
-        if args.unblock in my_macs.iterkeys():
-            ptcl.unblock_dev(my_macs[args.unblock.lower()])
-            print "%s has been unblocked." % args.unblock.capitalize()
 
         elif not args.unblock:
-            print "Calling unblocker Function"
+            print "Calling unblocker function - CLI MODE."
             name = ptcl.show_active_dev()
             dev_mac = int(raw_input("Please Enter Device Number: ")) - 1
             ptcl.unblock_dev(ptcl.mac_and_host[name[dev_mac]])
