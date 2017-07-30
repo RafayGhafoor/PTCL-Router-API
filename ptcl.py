@@ -52,6 +52,28 @@ def main():
             elif args.unblock not in my_macs.iterkeys():
                 print "User not found."
 
+        elif args.active_devices:
+            print "Calling Station info Function"
+            ptcl.get_stationinfo()
+            print "Currently active devices are:", len(ptcl.active_dev)
+
+        elif args.restart:
+            print "Calling restart Function"
+            ptcl.get_sessionkey()
+            ptcl.reboot_router()
+
+        elif args.show_dhcp:
+            print "Calling DHCP_info Function"
+            # ptcl.get_sessionkey()
+            ptcl.show_dhcpinfo()
+
+        elif args.show_active == '.':
+            print "Calling show_active Function"
+            ptcl.show_active_dev()
+
+        else:
+            print "Invalid Argument"
+
 
     elif not args.quiet:
         if not args.block:
@@ -69,27 +91,6 @@ def main():
             ptcl.unblock_dev(ptcl.mac_and_host[name[dev_mac]])
             print "%s has been unblocked." % name[dev_mac].capitalize()
 
-    elif args.active_devices:
-        print "Calling Station info Function"
-        ptcl.get_stationinfo()
-        print "Currently active devices are:", len(ptcl.active_dev)
-
-    elif args.restart:
-        print "Calling restart Function"
-        ptcl.get_sessionkey()
-        ptcl.reboot_router()
-
-    elif args.show_dhcp:
-        print "Calling DHCP_info Function"
-        # ptcl.get_sessionkey()
-        ptcl.show_dhcpinfo()
-
-    elif args.show_active == '.':
-        print "Calling show_active Function"
-        ptcl.show_active_dev()
-
-    else:
-        print "Invalid Argument"
 
 import time
 start_time = time.time()
