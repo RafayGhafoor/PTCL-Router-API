@@ -131,25 +131,35 @@ class Router(object):
 
 
     def show_blocked_dev(self):
-        pass
-
-
-    def set_hostname(self):
-        pass
-
-
-    def hh_to_HH(self, time):
         '''
-        Converts 12 hours format to 24 hours.
+        Display blocked devices.
         '''
-        pass
+        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=view")
+        print "Showing blocked devices.\n"
+        for i in soup.findAll('td'):
+            if not i.find("input"):
+                if Router.mac_adr_regex.search(i.text):
+                    print i.text + '\n'
+            
 
+    def set_hostname(self, custom_name, mac_address):
+        '''
+        Set custom hostname for a device. For example:
+        >>> DESKTOP-1RXG23 --> My-PC
+        '''
+        self.get_dhcpinfo()
+        custom_hostnames = {}
+        self.mac_and_host = dict(zip(self.dev_hostname, self.mac_address))
+        for i in self.mac_and_host.items():
+            if mac_address in i:
+                del(self.mac_and_host[i[0]])
+        self.mac_and_host[custom_name] = mac_address
+            
 
     def reboot_router(self):
         '''
         Reboots Router.
         '''
-        self.get_stationinfo()
         r, soup = self.scrape_page(self.mask + ("rebootinfo.cgi?sessionKey=%s") % self.session_key)
         print "Rebooted."
 
