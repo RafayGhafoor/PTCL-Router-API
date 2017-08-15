@@ -1,7 +1,6 @@
 # PTCL-Router:
 
-A PTCL-Router API. A CLI-script which allows to obtain information and configure PTCL router settings from commandline. 
-
+A PTCL-Router API.
 
 # Current-Features:
 
@@ -13,13 +12,6 @@ A PTCL-Router API. A CLI-script which allows to obtain information and configure
 - Over-ride hostnames associated to the mac address with custom hostnames.
 - Display blocked devices.
 - Added two modes for blocking users ( CLI-MODE and SILENT-MODE (Default) ).
-- Block and unblock devices using their aliases/nicknames predefined. 
-For example:
-```python
->>> python ptcl.py -b John
-```
-will block the user John off the network.
->>>>>>> origin/master
 
 # Usage:
 
@@ -62,21 +54,6 @@ will block the user John off the network.
 - [ ] Option to change router transmission power.
 - [ ] Improving display for blocked devices.
 - [ ] Exclude android devices from station info and dhcp info.
-
-# TODO:
-
-- Writing better documentation.
-- Optimize Regular Expressions.
-- Adding a method to change router password.
-- Option to change frequency 2.4 Ghz or 5 Ghz. 
-- Option to change router transmission power.
-- Formatting output.
-- Testing on other routers from the same vendor.
-
-# Features implementation to be done:
-
-- [ ] Exclude android devices from station info and dhcp info.
-- [X] Reboot router from script.
 - [ ] Time restriction for user (by specifying or choosing from station info) device mac address or hostname.
 - [ ] Adding URL to block unnecessary use for a website, also time limit for a site usage.
 - [ ] Monitor devices connection info i.e., when they connect to the router and disconnect. Also devices uptime of the day.
@@ -91,7 +68,6 @@ will block the user John off the network.
 - [X] Testing on other routers from the same vendor.
 - [X] Reboot router from script.
 - [X] Display number of active devices.
-
 
 
 
