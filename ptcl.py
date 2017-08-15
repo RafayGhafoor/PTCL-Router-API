@@ -1,28 +1,26 @@
 from router import Router
 import argparse
 import sys
-my_macs = {
-        "mytab": "5c:2e:59:4d:33:67",
-        "ahmer": "68:94:23:AC:59:51",
-        "asad": "A0:32:99:AB:33:31",
-        "hhp": "44-1C-A8-73-A3-17",
-        "j7": "",
-        "xperia": "",
-        "haris": "",
-        "i3": "",
-        "n4050": ""
-        }
+import configobj
 
+config = configobj.ConfigObj()
 ptcl = Router()
 # ptcl = Router(mask='192.168.10.1', password='bec10')
-
+# Defining custom aliases
+# config['User-Aliases'] = {
+# "mytab": "5c:2e:59:4d:33:67",
+# "ahmer": "68:94:23:AC:59:51",
+# "asad": "A0:32:99:AB:33:31",
+# "hhp": "44-1C-A8-73-A3-17"
+# }
+config[User-Aliases] = {}
 
 def main():
     parser = argparse.ArgumentParser(description="Control PTCL router from command-line.")
     parser.add_argument('-b', '--block', help="Block device.", nargs='?')
-    parser.add_argument('-sb', '--blocked_dev', help='Quite mode.', action='store_true')
+    parser.add_argument('-sb', '--blocked_dev', help='Display blocked devices.', action='store_true')
     parser.add_argument('-u', '--unblock', help="Unblock device.", nargs='?')
-    parser.add_argument('-a', '--active-devices', help="Gets active devices number.", action='store_true')
+    parser.add_argument('-a', '--active-devices', help="Gets number of devices connected to the router.", action='store_true')
     parser.add_argument('-r', '--restart', help="Restart Router.", action='store_true')
     parser.add_argument('-sd', '--show-dhcp', help='Show DHCP Info.', action='store_true')
     parser.add_argument('-s', '--show-active', help='Show Active Devices.', default='.')
@@ -71,10 +69,23 @@ def main():
         elif args.blocked_dev:
             ptcl.show_blocked_dev()
 
+        elif args.configure:
+            # Creating a config file
+            mask = raw_input("Please enter router gateway: \t\t# Default 192.168.1.1")
+            username = raw_input("Please enter username of your router page: \t\t# Default 'admin'")
+            password = raw_input("Please enter password of your router page: \t\t# Default 'admin'")
+            config['Router-Auth'] = {
+            'mask': '192.168.1.1',
+            'username': 'admin',
+            'password': 'admin'
+            }
+            with open('config.ini', 'w') as configfile:
+                config.write(configfile)
+
         elif args.show_active == '.':
             # print "Calling show_active Function"
             ptcl.show_active_dev()
-        
+
         else:
             print "Invalid Argument"
 
