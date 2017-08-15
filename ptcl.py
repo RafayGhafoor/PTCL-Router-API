@@ -24,7 +24,7 @@ def main():
     parser.add_argument('-r', '--restart', help="Restart Router.", action='store_true')
     parser.add_argument('-sd', '--show-dhcp', help='Show DHCP Info.', action='store_true')
     parser.add_argument('-s', '--show-active', help='Show Active Devices.', default='.')
-    parser.add_argument('-c', '--configure', help='Configure router settings.')
+    parser.add_argument('-c', '--configure', help='Configure router settings.', action='store_true')
     parser.add_argument('-q', '--quiet', help='Quite mode.', nargs='?', default='True')
     args = parser.parse_args()
     # print args
@@ -71,14 +71,18 @@ def main():
 
         elif args.configure:
             # Creating a config file
+            DEFAULT = {'mask': '192.168.1.1', 'username': 'admin', 'password': 'admin'}
             mask = raw_input("Please enter router gateway: \t\t# Default 192.168.1.1")
+            if mask:
+                DEFAULT['mask'] = mask
             username = raw_input("Please enter username of your router page: \t\t# Default 'admin'")
+            if username:
+                DEFAULT['username'] = username
             password = raw_input("Please enter password of your router page: \t\t# Default 'admin'")
-            config['Router-Auth'] = {
-            'mask': '192.168.1.1',
-            'username': 'admin',
-            'password': 'admin'
-            }
+            if password:
+                DEFAULT['password'] = password
+            config['Router-Auth'] = DEFAULT
+
             with open('config.ini', 'w') as configfile:
                 config.write(configfile)
 
