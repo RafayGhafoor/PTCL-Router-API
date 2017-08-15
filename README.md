@@ -15,6 +15,31 @@ A PTCL-Router API.
 
 # Usage:
 
+```
+usage: ptcl.py [-h] [-b [BLOCK]] [-sb] [-u [UNBLOCK]] [-a] [-r] [-sd]
+               [-s SHOW_ACTIVE] [-c] [-q [QUIET]]
+
+Control PTCL router from command-line.
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -b [BLOCK], --block [BLOCK]
+                        Block device.
+  -sb, --blocked_dev    Display blocked devices.
+  -u [UNBLOCK], --unblock [UNBLOCK]
+                        Unblock device.
+  -a, --active-devices  Gets number of devices connected to the router.
+  -r, --restart         Restart Router.
+  -sd, --show-dhcp      Show DHCP Info.
+  -s SHOW_ACTIVE, --show-active SHOW_ACTIVE
+                        Show Active Devices.
+  -c, --configure       Configure router settings.
+  -q [QUIET], --quiet [QUIET]
+                        Quite mode.
+```
+
+# Examples:
+
 **Shows devices connected to the router.**
 
 ```python
