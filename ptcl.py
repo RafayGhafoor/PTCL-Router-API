@@ -3,7 +3,7 @@ import argparse
 import sys
 import configobj
 
-config = configobj.ConfigObj()
+
 ptcl = Router()
 # ptcl = Router(mask='192.168.10.1', password='bec10')
 # Defining custom aliases
@@ -13,7 +13,6 @@ ptcl = Router()
 # "asad": "A0:32:99:AB:33:31",
 # "hhp": "44-1C-A8-73-A3-17"
 # }
-config['User-Aliases'] = {}
 
 def main():
     parser = argparse.ArgumentParser(description="Control PTCL router from command-line.")
@@ -25,6 +24,7 @@ def main():
     parser.add_argument('-sd', '--show-dhcp', help='Show DHCP Info.', action='store_true')
     parser.add_argument('-s', '--show-active', help='Show Active Devices.', default='.')
     parser.add_argument('-c', '--configure', help='Configure router settings.', action='store_true')
+    parser.add_argument('-sa', '--set-alias', help='Set custom alias for a device hostname.', action='store_true')
     parser.add_argument('-q', '--quiet', help='Quite mode.', nargs='?', default='True')
     args = parser.parse_args()
     # print args
@@ -71,20 +71,25 @@ def main():
 
         elif args.configure:
             # Creating a config file
+            config = configobj.ConfigObj()
+            config['User-Aliases'] = {}
             DEFAULT = {'mask': '192.168.1.1', 'username': 'admin', 'password': 'admin'}
-            mask = raw_input("Please enter router gateway: \t\t# Default 192.168.1.1")
+            mask = raw_input("Leave empty for default configuration.\nPlease enter router gateway\t(Default 192.168.1.1)\t: ")
             if mask:
                 DEFAULT['mask'] = mask
-            username = raw_input("Please enter username of your router page: \t\t# Default 'admin'")
+            username = raw_input("Please enter router username\t(Default admin)\t: ")
             if username:
                 DEFAULT['username'] = username
-            password = raw_input("Please enter password of your router page: \t\t# Default 'admin'")
+            password = raw_input("Please enter router password\t(Default admin)\t: ")
             if password:
                 DEFAULT['password'] = password
             config['Router-Auth'] = DEFAULT
-            print DEFAULT
             with open('config.ini', 'w') as configfile:
-                config.write(DEFAULT)
+                config.write(configfile)
+            print '\nConfiguration file Generated.'
+
+        elif args.set_alias:
+            pass
 
         elif args.show_active == '.':
             # print "Calling show_active Function"
