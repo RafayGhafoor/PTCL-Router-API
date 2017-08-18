@@ -102,11 +102,11 @@ class Router(object):
         '''
         self.get_stationinfo()
         self.get_dhcpinfo()
-        self.mac_and_host = dict(zip(self.dev_hostname, self.mac_address))
+        self.mac_and_host = tuple(zip(self.dev_hostname, self.mac_address))
         hostnames = []
         print "-" * 20 + "STATION-INFO" + "-" * 20 + '\n'
         count = 1
-        for k, v in self.mac_and_host.iteritems():
+        for k, v in self.mac_and_host:
             for active_clients in self.active_dev:
                 if active_clients in v:
                     print "(%s) %s%s\n" % (count, k + ":" + ' ' * (30 - len(k) - len(str(count))), active_clients.upper())
@@ -140,7 +140,7 @@ class Router(object):
             if not i.find("input"):
                 if Router.mac_adr_regex.search(i.text):
                     print i.text + '\n'
-            
+
 
     def set_hostname(self, custom_name, mac_address):
         '''
@@ -154,7 +154,7 @@ class Router(object):
             if mac_address in i:
                 del(self.mac_and_host[i[0]])
         self.mac_and_host[custom_name] = mac_address
-            
+
 
     def reboot_router(self):
         '''

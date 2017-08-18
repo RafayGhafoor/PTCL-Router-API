@@ -13,7 +13,7 @@ ptcl = Router()
 # "asad": "A0:32:99:AB:33:31",
 # "hhp": "44-1C-A8-73-A3-17"
 # }
-config[User-Aliases] = {}
+config['User-Aliases'] = {}
 
 def main():
     parser = argparse.ArgumentParser(description="Control PTCL router from command-line.")
@@ -82,9 +82,9 @@ def main():
             if password:
                 DEFAULT['password'] = password
             config['Router-Auth'] = DEFAULT
-
+            print DEFAULT
             with open('config.ini', 'w') as configfile:
-                config.write(configfile)
+                config.write(DEFAULT)
 
         elif args.show_active == '.':
             # print "Calling show_active Function"
