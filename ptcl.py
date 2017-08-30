@@ -4,8 +4,14 @@ import sys
 import configobj
 
 
-# ptcl = Router()
-ptcl = Router(mask='192.168.10.1', password='')
+ptcl = Router(password='ptcl')
+my_macs = {"mytab": "5c:2e:59:4d:33:67",
+"ahmer": "68:94:23:AC:59:51",
+"asad": "A0:32:99:AB:33:31",
+"hhp": "44-1C-A8-73-A3-17",
+"haris": "64:5A:04:76:C7:9C"
+}
+# ptcl = Router(mask='192.168.10.1', password='123motorcross')
 # Defining custom aliases
 # config['User-Aliases'] = {
 # "mytab": "5c:2e:59:4d:33:67",
@@ -18,7 +24,7 @@ def main():
     parser = argparse.ArgumentParser(description="Control PTCL router from command-line.")
     parser.add_argument('-b', '--block', help="Block device.", nargs='?')
     parser.add_argument('-sb', '--blocked_dev', help='Display blocked devices.', action='store_true')
-    parser.add_argument('-u', '--unblock', help="Unblock device.", nargs='?')
+    parser.add_argument('-ub', '--unblock', help="Unblock device.", nargs='?')
     parser.add_argument('-a', '--active-devices', help="Gets number of devices connected to the router.", action='store_true')
     parser.add_argument('-r', '--restart', help="Restart Router.", action='store_true')
     parser.add_argument('-sd', '--show-dhcp', help='Show DHCP Info.', action='store_true')
@@ -100,9 +106,11 @@ def main():
 
 
     elif not args.cli:
+        ptcl.get_sessionkey()
         if not args.block:
             # print "Calling blocker function - CLI MODE."
             name = ptcl.show_active_dev()
+            ptcl.mac_and_host = dict(ptcl.mac_and_host)
             dev_mac = int(raw_input("Please Enter Device Number: ")) - 1
             ptcl.block_dev(ptcl.mac_and_host[name[dev_mac]])
             print "%s has been blocked." % name[dev_mac].capitalize()
@@ -111,6 +119,7 @@ def main():
         elif not args.unblock:
             # print "Calling unblocker function - CLI MODE."
             name = ptcl.show_active_dev()
+            ptcl.mac_and_host = dict(ptcl.mac_and_host)
             dev_mac = int(raw_input("Please Enter Device Number: ")) - 1
             ptcl.unblock_dev(ptcl.mac_and_host[name[dev_mac]])
             print "%s has been unblocked." % name[dev_mac].capitalize()
