@@ -4,8 +4,8 @@ import sys
 import configobj
 
 
-ptcl = Router()
-# ptcl = Router(mask='192.168.10.1', password='bec10')
+# ptcl = Router()
+ptcl = Router(mask='192.168.10.1', password='')
 # Defining custom aliases
 # config['User-Aliases'] = {
 # "mytab": "5c:2e:59:4d:33:67",
@@ -23,13 +23,13 @@ def main():
     parser.add_argument('-r', '--restart', help="Restart Router.", action='store_true')
     parser.add_argument('-sd', '--show-dhcp', help='Show DHCP Info.', action='store_true')
     parser.add_argument('-s', '--show-active', help='Show Active Devices.', default='.')
-    parser.add_argument('-c', '--configure', help='Configure router settings.', action='store_true')
+    parser.add_argument('--configure', help='Configure router settings.', action='store_true')
     parser.add_argument('-sa', '--set-alias', help='Set custom alias for a device hostname.', action='store_true')
-    parser.add_argument('-q', '--quiet', help='Quite mode.', nargs='?', default='True')
+    parser.add_argument('-c', '--cli', help='Silent mode.', nargs='?', default='False')
     args = parser.parse_args()
     # print args
 
-    if args.quiet == 'True':
+    if args.cli == 'False':
         if args.block:
             # print "Calling blocker Function"
             ptcl.get_sessionkey()
@@ -99,7 +99,7 @@ def main():
             print "Invalid Argument"
 
 
-    elif not args.quiet:
+    elif not args.cli:
         if not args.block:
             # print "Calling blocker function - CLI MODE."
             name = ptcl.show_active_dev()

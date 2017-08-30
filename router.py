@@ -57,7 +57,9 @@ class Router(object):
 
 
     def get_dhcpinfo(self):
-        '''Gets information from dhcp i.e., Mac Adresses and Hostnames.'''
+        '''
+        Gets information from dhcp i.e., Mac Adresses and Hostnames.
+        '''
         r, soup = self.scrape_page(self.mask + 'dhcpinfo.html')
         count = 1
         td = soup.findAll('td')
@@ -76,7 +78,9 @@ class Router(object):
 
 
     def show_dhcpinfo(self):
-        '''Shows DHCP information.'''
+        '''
+        Shows DHCP information.
+        '''
         self.get_dhcpinfo()
         print "-" * 20 + "DHCP-INFO" + "-" * 20 + '\n'
         for num, i in enumerate(zip(self.dev_hostname, self.mac_address), 1):
@@ -94,7 +98,6 @@ class Router(object):
         for i in soup.findAll('td'):
             if self.mac_adr_regex.search(i.text.strip()):
                 self.active_dev.append(i.text.strip().lower().encode('ascii'))
-
 
     def show_active_dev(self):
         '''
@@ -207,12 +210,16 @@ class Monitor(Router):
 
 
     def monitor_dev(self): # Monitor Devices
-        '''Monitor devices, when they connect to router and disconnect. Also
-        gets the time a device remains connected to the router.'''
+        '''
+        Monitor devices, when they connect to router and disconnect. Also
+        gets the time a device remains connected to the router.
+        '''
         pass
 
 
     def dev_conninfo(self):   # Device Connection Info
-        '''Analyzes how much time a device remains connected to the device throughout
-        the day.'''
+        '''
+        Analyzes how much time a device remains connected to the device throughout
+        the day.
+        '''
         pass
