@@ -13,7 +13,7 @@ import requests
 import bs4
 import re
 import sys
-
+from tabulate import tabulate
 
 class Router(object):
     '''
@@ -41,6 +41,8 @@ class Router(object):
         '''
         try:
             request_url = self.session.get(url)
+            if request_url.status_code == 401:
+                sys.exit("Username or Password is incorrect.")
             html_soup = bs4.BeautifulSoup(request_url.content, 'html.parser')
             return request_url, html_soup
         except requests.exceptions.ConnectionError:
@@ -82,11 +84,8 @@ class Router(object):
         Shows DHCP information.
         '''
         self.get_dhcpinfo()
-        print "-" * 20 + "DHCP-INFO" + "-" * 20 + '\n'
-        for num, i in enumerate(zip(self.dev_hostname, self.mac_address), 1):
-            whitespace = 30 - len(i[0]) - len(str(num))
-            print "(%s) %s:%s\n" % (num, i[0], ' ' * whitespace + i[1].upper())
-        print "-" * 49
+        print tabulate({"HOSTNAME": self.dev_hostname, "MAC-ADDRESSES": self.mac_address}, headers=['HOSTNAME', 'Device-No.', 'MAC-ADDRESSES'], tablefmt='fancy_grid')
+        print "\n\n\t\tTotal Active Devices are [%s].\n\n" % len(self.dev_hostname)
 
 
     def get_stationinfo(self):

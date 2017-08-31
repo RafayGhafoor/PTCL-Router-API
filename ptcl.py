@@ -4,14 +4,14 @@ import sys
 import configobj
 
 
-ptcl = Router(password='ptcl')
+# ptcl = Router(password='ptcl')
 my_macs = {"mytab": "5c:2e:59:4d:33:67",
 "ahmer": "68:94:23:AC:59:51",
 "asad": "A0:32:99:AB:33:31",
 "hhp": "44-1C-A8-73-A3-17",
 "haris": "64:5A:04:76:C7:9C"
 }
-# ptcl = Router(mask='192.168.10.1', password='123motorcross')
+ptcl = Router(mask='192.168.10.1', password='123motorcross')
 # Defining custom aliases
 # config['User-Aliases'] = {
 # "mytab": "5c:2e:59:4d:33:67",
