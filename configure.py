@@ -1,6 +1,7 @@
 import configobj
 import os
 
+config = ""
 
 def write_config():
   # Creating a config file
@@ -56,7 +57,21 @@ def set_alias():
     else:
         print "Already Present."
 
+
 def get_alias():
     # Return Aliases
     config = configobj.ConfigObj('config.ini')
     return config["Aliases"]
+
+
+def config_check():
+    path = os.path.expanduser(os.path.join('~', '.config' + os.sep + 'ptcl'))
+
+    if os.path.exists(path):
+        os.chdir(path)
+        global config
+        config = configobj.ConfigObj('config.ini')
+        return True
+    else:
+        write_config()
+        return False
