@@ -7,7 +7,7 @@ A PTCL-Router API.
 - Obtain station information, showing their hostnames alongside for better readability (devices currently connected to the router).
 - Obtain DHCP information.
 - Block and unblock devices using their mac addresses.
-- Block and unblock devices using their predefined aliases. 
+- Block and unblock devices using their predefined aliases.
 - Reboot router.
 - Over-ride hostnames associated to the mac address with custom hostnames.
 - Display blocked devices.
@@ -19,13 +19,13 @@ A PTCL-Router API.
 
 ```python
 >>> python ptcl.py
-``` 
+```
 
 **Shows currently active devices and provides an option to block device from the display.**
 
-```python 
+```python
 >>> python ptcl.py -b
-``` 
+```
 
 **Shows DHCP info for all devices connected in a day.**
 
@@ -51,7 +51,7 @@ A PTCL-Router API.
 - [ ] Changing SSID-Name.
 - [ ] Adding a method to change router password.
 - [ ] Add CLI MODE for unblocking devices.
-- [ ] Option to change frequency 2.4 Ghz or 5 Ghz. 
+- [ ] Option to change frequency 2.4 Ghz or 5 Ghz.
 - [ ] Option to change router transmission power.
 - [ ] Improving display for blocked devices.
 - [ ] Exclude android devices from station info and dhcp info (Optional).
@@ -68,7 +68,3 @@ A PTCL-Router API.
 - [X] Testing on other routers from the same vendor.
 - [X] Reboot router from script.
 - [X] Display number of active devices.
-
-
-
-
