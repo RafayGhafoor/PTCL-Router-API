@@ -39,15 +39,23 @@ Options:
 
 # Examples:
 
-```python
+```
 >>> python ptcl.py --configure        # Configure router gateway, username and password
+
 >>> python ptcl.py                    # Shows currently active devices.
+
 >>> python ptcl.py -sa                # Set custom aliases for mac addresses.
+
 >>> python ptcl.py -b USER            # Block user from custom defined alias.
+
 >>> python ptcl.py -ub USER           # Unblock user from custom defined alias.
+
 >>> python ptcl.py -b -c              # Block devices from the active devices display.
+
 >>> python ptcl.py -sb                # Show blocked users.
+
 >>> python ptcl.py -sd                # Show DHCP info.
+
 >>> python ptcl.py -r                 # Reboots router.
 ```
 
