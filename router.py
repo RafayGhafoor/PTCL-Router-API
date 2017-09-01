@@ -29,7 +29,7 @@ class Router(object):
         self.dev_hostname = []  # Devices Hostname
         self.mac_address = []   # Devices Mac Address
         self.active_dev = []    # Active Devices on Wi-Fi
-        self.mac_and_host = {}  # Mac Addresses and Hostnames
+        self.host_and_mac = {}  # Mac Addresses and Hostnames
         self.session = requests.Session()
         self.session.auth = (self.username, self.password)
         self.session_key = ""
@@ -84,8 +84,8 @@ class Router(object):
         Shows DHCP information.
         '''
         self.get_dhcpinfo()
-        print tabulate({"HOSTNAME": self.dev_hostname, "MAC-ADDRESSES": self.mac_address}, headers=['HOSTNAME', 'Device-No.', 'MAC-ADDRESSES'], tablefmt='fancy_grid')
-        print "\n\n\t\tTotal Active Devices are [%s].\n\n" % len(self.dev_hostname)
+        print tabulate({"HOSTNAME": self.dev_hostname, "MAC-ADDRESSES": self.mac_address}, headers=['HOSTNAME', 'MAC-ADDRESSES'], tablefmt='fancy_grid')
+        print "\n\n\t\tTotal Devices Connected Today are: [%s].\n\n" % len(self.dev_hostname)
 
 
     def get_stationinfo(self):
@@ -104,17 +104,17 @@ class Router(object):
         '''
         self.get_stationinfo()
         self.get_dhcpinfo()
-        self.mac_and_host = tuple(zip(self.dev_hostname, self.mac_address))
+        self.host_and_mac = tuple(zip(self.dev_hostname, self.mac_address))
         hostnames = []
-        print "-" * 20 + "STATION-INFO" + "-" * 20 + '\n'
+        display_list = []
         count = 1
-        for k, v in self.mac_and_host:
+        for hostname, mac in self.host_and_mac:
             for active_clients in self.active_dev:
-                if active_clients in v:
-                    print "(%s) %s%s\n" % (count, k + ":" + ' ' * (30 - len(k) - len(str(count))), active_clients.upper())
-                    hostnames.append(k)
+                if active_clients in mac:
+                    display_list.append([count, hostname, active_clients])
+                    hostnames.append(hostname)
                     count += 1
-        print "-" * 52 + '\n'
+        print tabulate(display_list, headers=["DEVICE-NO.", "HOSTNAME", "MAC"], tablefmt="fancy_grid")
         return hostnames
 
 
@@ -151,11 +151,11 @@ class Router(object):
         '''
         self.get_dhcpinfo()
         custom_hostnames = {}
-        self.mac_and_host = dict(zip(self.dev_hostname, self.mac_address))
-        for i in self.mac_and_host.items():
+        self.host_and_mac = dict(zip(self.dev_hostname, self.mac_address))
+        for i in self.host_and_mac.items():
             if mac_address in i:
-                del(self.mac_and_host[i[0]])
-        self.mac_and_host[custom_name] = mac_address
+                del(self.host_and_mac[i[0]])
+        self.host_and_mac[custom_name] = mac_address
 
 
     def reboot_router(self):

@@ -110,22 +110,19 @@ def main():
         if not args.block:
             # print "Calling blocker function - CLI MODE."
             name = ptcl.show_active_dev()
-            ptcl.mac_and_host = dict(ptcl.mac_and_host)
+            ptcl.host_and_mac = dict(ptcl.host_and_mac)
             dev_mac = int(raw_input("Please Enter Device Number: ")) - 1
-            ptcl.block_dev(ptcl.mac_and_host[name[dev_mac]])
+            ptcl.block_dev(ptcl.host_and_mac[name[dev_mac]])
             print "%s has been blocked." % name[dev_mac].capitalize()
 
 
         elif not args.unblock:
             # print "Calling unblocker function - CLI MODE."
             name = ptcl.show_active_dev()
-            ptcl.mac_and_host = dict(ptcl.mac_and_host)
+            ptcl.host_and_mac = dict(ptcl.host_and_mac)
             dev_mac = int(raw_input("Please Enter Device Number: ")) - 1
-            ptcl.unblock_dev(ptcl.mac_and_host[name[dev_mac]])
+            ptcl.unblock_dev(ptcl.host_and_mac[name[dev_mac]])
             print "%s has been unblocked." % name[dev_mac].capitalize()
 
 
-import time
-start_time = time.time()
 main()
-print("--- %s seconds ---" % (time.time() - start_time))
