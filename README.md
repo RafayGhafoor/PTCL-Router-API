@@ -1,17 +1,6 @@
-# PTCL-Router:
+# PTCL-Router-API:
 
-A PTCL-Router API.
-
-# Current-Features:
-
-- Obtain station information, showing their hostnames alongside for better readability (devices currently connected to the router).
-- Obtain DHCP information.
-- Block and unblock devices using their mac addresses.
-- Block and unblock devices using their predefined aliases.
-- Reboot router.
-- Over-ride hostnames associated to the mac address with custom hostnames.
-- Display blocked devices.
-- Added two modes for blocking users ( CLI-MODE and SILENT-MODE (Default) ).
+A PTCL-Router API to interact with default router interface.
 
 # Usage:
 
@@ -50,8 +39,6 @@ Options:
 
 # Examples:
 
-**Shows devices connected to the router.**
-
 ```python
 >>> python ptcl.py --configure        # Configure router gateway, username and password
 >>> python ptcl.py                    # Shows currently active devices.
@@ -63,6 +50,17 @@ Options:
 >>> python ptcl.py -sd                # Show DHCP info.
 >>> python ptcl.py -r                 # Reboots router.
 ```
+
+# Current-Features:
+
+- Obtain station information, showing their hostnames alongside for better readability (devices currently connected to the router).
+- Obtain DHCP information.
+- Block and unblock devices using their mac addresses.
+- Block and unblock devices using their predefined aliases.
+- Reboot router.
+- Over-ride hostnames associated to the mac address with custom hostnames.
+- Display blocked devices.
+- Added two modes for blocking users ( CLI-MODE and SILENT-MODE (Default) ).
 
 # TODO:
 
