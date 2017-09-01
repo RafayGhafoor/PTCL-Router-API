@@ -13,7 +13,7 @@ import requests
 import bs4
 import re
 import sys
-
+from tabulate import tabulate
 
 class Router(object):
     '''
@@ -29,7 +29,7 @@ class Router(object):
         self.dev_hostname = []  # Devices Hostname
         self.mac_address = []   # Devices Mac Address
         self.active_dev = []    # Active Devices on Wi-Fi
-        self.mac_and_host = {}  # Mac Addresses and Hostnames
+        self.host_and_mac = []  # Mac Addresses and Hostnames
         self.session = requests.Session()
         self.session.auth = (self.username, self.password)
         self.session_key = ""
@@ -41,10 +41,12 @@ class Router(object):
         '''
         try:
             request_url = self.session.get(url)
+            if request_url.status_code == 401:
+                sys.exit("Username or Password is incorrect.")
             html_soup = bs4.BeautifulSoup(request_url.content, 'html.parser')
             return request_url, html_soup
         except requests.exceptions.ConnectionError:
-            print "Internet Connection Down.\nExiting..."
+            print("Internet Connection Down.\nExiting...")
             sys.exit()
 
 
@@ -53,11 +55,14 @@ class Router(object):
         Gets session key from the html page.
         '''
         r, soup = self.scrape_page(self.mask + "wlmacflt.cmd")
-        self.session_key= re.search(r'\d{3,30}', r.content).group().encode('ascii')
+        self.session_key = re.search(r'\d{3,30}', r.content).group().encode('ascii')
+        return self.session_key
 
 
     def get_dhcpinfo(self):
-        '''Gets information from dhcp i.e., Mac Adresses and Hostnames.'''
+        '''
+        Gets information from dhcp i.e., Mac Adresses and Hostnames.
+        '''
         r, soup = self.scrape_page(self.mask + 'dhcpinfo.html')
         count = 1
         td = soup.findAll('td')
@@ -76,13 +81,12 @@ class Router(object):
 
 
     def show_dhcpinfo(self):
-        '''Shows DHCP information.'''
+        '''
+        Shows DHCP information.
+        '''
         self.get_dhcpinfo()
-        print "-" * 20 + "DHCP-INFO" + "-" * 20 + '\n'
-        for num, i in enumerate(zip(self.dev_hostname, self.mac_address), 1):
-            whitespace = 30 - len(i[0]) - len(str(num))
-            print "(%s) %s:%s\n" % (num, i[0], ' ' * whitespace + i[1].upper())
-        print "-" * 49
+        print tabulate({"HOSTNAME": self.dev_hostname, "MAC-ADDRESSES": self.mac_address}, headers=['HOSTNAME', 'MAC-ADDRESSES'], tablefmt='fancy_grid')
+        print "\n\n\t\tTotal Devices Connected Today are: [%s].\n\n" % len(self.dev_hostname)
 
 
     def get_stationinfo(self):
@@ -95,24 +99,24 @@ class Router(object):
             if self.mac_adr_regex.search(i.text.strip()):
                 self.active_dev.append(i.text.strip().lower().encode('ascii'))
 
-
     def show_active_dev(self):
         '''
         Shows active devices (Mac Addresses) and their hostnames.
         '''
         self.get_stationinfo()
         self.get_dhcpinfo()
-        self.mac_and_host = dict(zip(self.dev_hostname, self.mac_address))
+        self.host_and_mac = tuple(zip(self.dev_hostname, self.mac_address))
         hostnames = []
-        print "-" * 20 + "STATION-INFO" + "-" * 20 + '\n'
+        display_list = []
         count = 1
-        for k, v in self.mac_and_host.iteritems():
+        print "\nShowing Currently Active Devices.\n"
+        for hostname, mac in self.host_and_mac:
             for active_clients in self.active_dev:
-                if active_clients in v:
-                    print "(%s) %s%s\n" % (count, k + ":" + ' ' * (30 - len(k) - len(str(count))), active_clients.upper())
-                    hostnames.append(k)
+                if active_clients in mac:
+                    display_list.append([count, hostname, active_clients])
+                    hostnames.append(hostname)
                     count += 1
-        print "-" * 52 + '\n'
+        print tabulate(display_list, headers=["DEVICE-NO.", "HOSTNAME", "MAC"], tablefmt="fancy_grid")
         return hostnames
 
 
@@ -140,28 +144,14 @@ class Router(object):
             if not i.find("input"):
                 if Router.mac_adr_regex.search(i.text):
                     print i.text + '\n'
-            
 
-    def set_hostname(self, custom_name, mac_address):
-        '''
-        Set custom hostname for a device. For example:
-        >>> DESKTOP-1RXG23 --> My-PC
-        '''
-        self.get_dhcpinfo()
-        custom_hostnames = {}
-        self.mac_and_host = dict(zip(self.dev_hostname, self.mac_address))
-        for i in self.mac_and_host.items():
-            if mac_address in i:
-                del(self.mac_and_host[i[0]])
-        self.mac_and_host[custom_name] = mac_address
-            
 
     def reboot_router(self):
         '''
         Reboots Router.
         '''
         r, soup = self.scrape_page(self.mask + ("rebootinfo.cgi?sessionKey=%s") % self.session_key)
-        print "Rebooted."
+        print "Router has been succesfully rebooted."
 
 
     def time_restriction(self):
@@ -207,12 +197,16 @@ class Monitor(Router):
 
 
     def monitor_dev(self): # Monitor Devices
-        '''Monitor devices, when they connect to router and disconnect. Also
-        gets the time a device remains connected to the router.'''
+        '''
+        Monitor devices, when they connect to router and disconnect. Also
+        gets the time a device remains connected to the router.
+        '''
         pass
 
 
     def dev_conninfo(self):   # Device Connection Info
-        '''Analyzes how much time a device remains connected to the device throughout
-        the day.'''
+        '''
+        Analyzes how much time a device remains connected to the device throughout
+        the day.
+        '''
         pass
