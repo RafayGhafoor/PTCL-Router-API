@@ -29,7 +29,7 @@ class Router(object):
         self.dev_hostname = []  # Devices Hostname
         self.mac_address = []   # Devices Mac Address
         self.active_dev = []    # Active Devices on Wi-Fi
-        self.host_and_mac = {}  # Mac Addresses and Hostnames
+        self.host_and_mac = []  # Mac Addresses and Hostnames
         self.session = requests.Session()
         self.session.auth = (self.username, self.password)
         self.session_key = ""
@@ -46,7 +46,7 @@ class Router(object):
             html_soup = bs4.BeautifulSoup(request_url.content, 'html.parser')
             return request_url, html_soup
         except requests.exceptions.ConnectionError:
-            print "Internet Connection Down.\nExiting..."
+            print("Internet Connection Down.\nExiting...")
             sys.exit()
 
 
@@ -55,7 +55,8 @@ class Router(object):
         Gets session key from the html page.
         '''
         r, soup = self.scrape_page(self.mask + "wlmacflt.cmd")
-        self.session_key= re.search(r'\d{3,30}', r.content).group().encode('ascii')
+        self.session_key = re.search(r'\d{3,30}', r.content).group().encode('ascii')
+        return self.session_key
 
 
     def get_dhcpinfo(self):
@@ -108,6 +109,7 @@ class Router(object):
         hostnames = []
         display_list = []
         count = 1
+        print "\nShowing Currently Active Devices.\n"
         for hostname, mac in self.host_and_mac:
             for active_clients in self.active_dev:
                 if active_clients in mac:
@@ -144,26 +146,12 @@ class Router(object):
                     print i.text + '\n'
 
 
-    def set_hostname(self, custom_name, mac_address):
-        '''
-        Set custom hostname for a device. For example:
-        >>> DESKTOP-1RXG23 --> My-PC
-        '''
-        self.get_dhcpinfo()
-        custom_hostnames = {}
-        self.host_and_mac = dict(zip(self.dev_hostname, self.mac_address))
-        for i in self.host_and_mac.items():
-            if mac_address in i:
-                del(self.host_and_mac[i[0]])
-        self.host_and_mac[custom_name] = mac_address
-
-
     def reboot_router(self):
         '''
         Reboots Router.
         '''
         r, soup = self.scrape_page(self.mask + ("rebootinfo.cgi?sessionKey=%s") % self.session_key)
-        print "Rebooted."
+        print "Router has been succesfully rebooted."
 
 
     def time_restriction(self):

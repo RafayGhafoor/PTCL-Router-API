@@ -2,23 +2,68 @@ from router import Router
 import argparse
 import sys
 import configobj
+import configure
+import os
+from tabulate import tabulate
+
+path = os.path.expanduser(os.path.join('~', '.config' + os.sep + 'ptcl'))
+
+if os.path.exists(path):
+    os.chdir(path)
+    config = configobj.ConfigObj('config.ini')
+    ptcl = Router(mask=config["Router-Auth"]["mask"], password=config["Router-Auth"]["password"])
+
+else:
+    print "Configuration file doesn't exists. Run it with --configure parameter.\nExecuting Fallback mode."
+    ptcl = Router(mask="192.168.10.1", password="123motorcross")
+    # ptcl = Router(password='ptcl')
 
 
-# ptcl = Router(password='ptcl')
-my_macs = {"mytab": "5c:2e:59:4d:33:67",
-"ahmer": "68:94:23:AC:59:51",
-"asad": "A0:32:99:AB:33:31",
-"hhp": "44-1C-A8-73-A3-17",
-"haris": "64:5A:04:76:C7:9C"
-}
-ptcl = Router(mask='192.168.10.1', password='123motorcross')
-# Defining custom aliases
-# config['User-Aliases'] = {
-# "mytab": "5c:2e:59:4d:33:67",
-# "ahmer": "68:94:23:AC:59:51",
-# "asad": "A0:32:99:AB:33:31",
-# "hhp": "44-1C-A8-73-A3-17"
-# }
+def show_dhcpinfo():
+    '''
+    Shows DHCP information.
+    '''
+    ptcl.get_dhcpinfo()
+    print tabulate({"HOSTNAME": ptcl.dev_hostname, "MAC-ADDRESSES": ptcl.mac_address}, headers=['HOSTNAME', 'MAC-ADDRESSES'], tablefmt='fancy_grid')
+    print "\n\n\t\tTotal Devices Connected Today are: [%s].\n\n" % len(ptcl.dev_hostname)
+
+
+def show_active_dev():
+      '''
+      Shows active devices (Mac Addresses) and their hostnames.
+      '''
+      ptcl.get_stationinfo()
+      ptcl.get_dhcpinfo()
+      ptcl.host_and_mac = tuple(zip(ptcl.dev_hostname, ptcl.mac_address))
+      hostnames = []
+      display_list = []
+      aliases = configure.get_alias()
+      count = 1
+      print "\nShowing Currently Active Devices.\n"
+      for hostname, mac in ptcl.host_and_mac:
+          for active_clients in ptcl.active_dev:
+              if active_clients in mac:
+                  if mac in aliases.itervalues():
+                      display_list.append([count, aliases.keys()[aliases.values().index(mac)], active_clients])
+                  else:
+                      display_list.append([count, hostname, active_clients])
+                  hostnames.append(hostname)
+                  count += 1
+      print tabulate(display_list, headers=["DEVICE-NO.", "HOSTNAME", "MAC"], tablefmt="fancy_grid")
+      return hostnames
+
+
+def show_blocked_dev():
+    '''
+    Display blocked devices.
+    '''
+    r, soup = ptcl.scrape_page(ptcl.mask + "wlmacflt.cmd?action=view")
+    print "Showing blocked devices.\n"
+    for i in soup.findAll('td'):
+        if not i.find("input"):
+            if Router.mac_adr_regex.search(i.text):
+                print i.text + '\n'
+
 
 def main():
     parser = argparse.ArgumentParser(description="Control PTCL router from command-line.")
@@ -36,9 +81,10 @@ def main():
     # print args
 
     if args.cli == 'False':
+        my_macs = configure.get_alias()
         if args.block:
             # print "Calling blocker Function"
-            ptcl.get_sessionkey()
+            ptcl.key()
             if args.block in my_macs.iterkeys():
                 # print "Calling blocker function - AUTOMATED MODE."
                 ptcl.block_dev(my_macs[args.block.lower()])
@@ -49,7 +95,6 @@ def main():
                 print "User not found."
 
         elif args.unblock:
-            ptcl.get_sessionkey()
             if args.unblock in my_macs.iterkeys():
                 # print "Calling unblocker function - AUTOMATED MODE"
                 ptcl.unblock_dev(my_macs[args.unblock.lower()])
@@ -64,52 +109,34 @@ def main():
 
         elif args.restart:
             # print "Calling restart Function"
-            ptcl.get_sessionkey()
             ptcl.reboot_router()
 
         elif args.show_dhcp:
             # print "Calling DHCP_info Function"
-            # ptcl.get_sessionkey()
-            ptcl.show_dhcpinfo()
+            show_dhcpinfo()
 
         elif args.blocked_dev:
-            ptcl.show_blocked_dev()
+            show_blocked_dev()
 
         elif args.configure:
-            # Creating a config file
-            config = configobj.ConfigObj()
-            config['User-Aliases'] = {}
-            DEFAULT = {'mask': '192.168.1.1', 'username': 'admin', 'password': 'admin'}
-            mask = raw_input("Leave empty for default configuration.\nPlease enter router gateway\t(Default 192.168.1.1)\t: ")
-            if mask:
-                DEFAULT['mask'] = mask
-            username = raw_input("Please enter router username\t(Default admin)\t: ")
-            if username:
-                DEFAULT['username'] = username
-            password = raw_input("Please enter router password\t(Default admin)\t: ")
-            if password:
-                DEFAULT['password'] = password
-            config['Router-Auth'] = DEFAULT
-            with open('config.ini', 'w') as configfile:
-                config.write(configfile)
-            print '\nConfiguration file Generated.'
+            configure.write_config()
 
         elif args.set_alias:
-            pass
+            show_active_dev()
+            configure.set_alias()
 
         elif args.show_active == '.':
             # print "Calling show_active Function"
-            ptcl.show_active_dev()
+            show_active_dev()
 
         else:
             print "Invalid Argument"
 
 
     elif not args.cli:
-        ptcl.get_sessionkey()
         if not args.block:
             # print "Calling blocker function - CLI MODE."
-            name = ptcl.show_active_dev()
+            name = show_active_dev()
             ptcl.host_and_mac = dict(ptcl.host_and_mac)
             dev_mac = int(raw_input("Please Enter Device Number: ")) - 1
             ptcl.block_dev(ptcl.host_and_mac[name[dev_mac]])
@@ -118,10 +145,11 @@ def main():
 
         elif not args.unblock:
             # print "Calling unblocker function - CLI MODE."
-            name = ptcl.show_active_dev()
+            name = show_active_dev()
             ptcl.host_and_mac = dict(ptcl.host_and_mac)
-            dev_mac = int(raw_input("Please Enter Device Number: ")) - 1
-            ptcl.unblock_dev(ptcl.host_and_mac[name[dev_mac]])
+            dev_mac = raw_input("Please enter device mac address: ")
+            ptcl.unblock_dev(dev_mac)
+            # ptcl.unblock_dev(ptcl.host_and_mac[name[dev_mac]])
             print "%s has been unblocked." % name[dev_mac].capitalize()
 
 
