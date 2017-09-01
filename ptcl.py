@@ -6,18 +6,6 @@ import configure
 import os
 from tabulate import tabulate
 
-path = os.path.expanduser(os.path.join('~', '.config' + os.sep + 'ptcl'))
-
-if os.path.exists(path):
-    os.chdir(path)
-    config = configobj.ConfigObj('config.ini')
-    ptcl = Router(mask=config["Router-Auth"]["mask"], password=config["Router-Auth"]["password"])
-
-else:
-    print "Configuration file doesn't exists. Run it with --configure parameter.\nExecuting Fallback mode."
-    ptcl = Router(mask="192.168.10.1", password="123motorcross")
-    # ptcl = Router(password='ptcl')
-
 
 def show_dhcpinfo():
     '''
@@ -78,7 +66,15 @@ def main():
     parser.add_argument('-sa', '--set-alias', help='Set custom alias for a device hostname.', action='store_true')
     parser.add_argument('-c', '--cli', help='Silent mode.', nargs='?', default='False')
     args = parser.parse_args()
-    # print args
+
+    if configure.config_check() == True:
+        if configure.config:
+            global ptcl
+            ptcl = Router(mask=configure.config["Router-Auth"]["mask"], password=configure.config["Router-Auth"]["password"])
+
+    else:
+        configure.config_check()
+        sys.exit("Please Re-run.")
 
     if args.cli == 'False':
         my_macs = configure.get_alias()
@@ -117,9 +113,6 @@ def main():
 
         elif args.blocked_dev:
             show_blocked_dev()
-
-        elif args.configure:
-            configure.write_config()
 
         elif args.set_alias:
             show_active_dev()
