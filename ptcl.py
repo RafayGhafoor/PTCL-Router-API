@@ -50,7 +50,7 @@ def show_blocked_dev():
     for i in soup.findAll('td'):
         if not i.find("input"):
             if Router.mac_adr_regex.search(i.text):
-                print i.text + '\n'
+                print tabulate([[i.text]], headers=["BLOCKED-DEV"], tablefmt="fancy_grid")
 
 
 def main():
