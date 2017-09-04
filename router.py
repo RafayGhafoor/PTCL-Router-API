@@ -4,7 +4,7 @@ through terminal.
 
 Example:
 
->>> from routerPTCL import Router
+>>> from router import Router
 >>> router = Router('192.168.1.1')
 >>> router.reboot() # Reboots router
 >>> router.active_dev() # Shows devices which are currently connected to the router
@@ -31,7 +31,7 @@ class Router(object):
         self.host_and_mac = []  # Mac Addresses and Hostnames
         self.session = requests.Session()
         self.session.auth = (self.username, self.password)
-        self.session_key = ""
+        self.sessionKey = ""
 
 
     def scrape_page(self, url):
@@ -49,21 +49,20 @@ class Router(object):
             sys.exit()
 
 
-    def get_sessionkey(self):
+    def session_key(self):
         '''
         Gets session key from the html page.
         '''
         r, soup = self.scrape_page(self.mask + "wlmacflt.cmd")
-        self.session_key = re.search(r'\d{3,30}', r.content).group().encode('ascii')
-        return self.session_key
+        self.sessionKey = re.search(r'\d{3,30}', r.content).group().encode('ascii')
+        return self.sessionKey
 
 
-    def get_dhcpinfo(self):
+    def dhcpinfo(self):
         '''
         Gets information from dhcp i.e., Mac Adresses and Hostnames.
         '''
         r, soup = self.scrape_page(self.mask + 'dhcpinfo.html')
-        count = 1
         td = soup.findAll('td')
         for i in td:
             if self.mac_adr_regex.search(i.text):
@@ -79,12 +78,11 @@ class Router(object):
                 self.mac_address.append(i.text.encode('ascii'))
 
 
-    def get_stationinfo(self):
+    def stationinfo(self):
         '''
         Gets information about the connected devices.
         '''
         r, soup = self.scrape_page(self.mask + "wlstationlist.cmd")
-        td = soup.findAll('td')
         for i in soup.findAll('td'):
             if self.mac_adr_regex.search(i.text.strip()):
                 self.active_dev.append(i.text.strip().lower().encode('ascii'))
@@ -94,21 +92,21 @@ class Router(object):
         '''
         Block device using Mac Address.
         '''
-        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=add&wlFltMacAddr=%s&sessionKey=%s" % (devmac, self.session_key))
+        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=add&wlFltMacAddr=%s&sessionKey=%s" % (devmac, self.session_key()))
 
 
     def unblock_dev(self, udevmac):
         '''
         Unblock device using Mac Address.
         '''
-        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, self.session_key))
+        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, self.session_key()))
 
 
-    def reboot_router(self):
+    def reboot(self):
         '''
         Reboots Router.
         '''
-        r, soup = self.scrape_page(self.mask + ("rebootinfo.cgi?sessionKey=%s") % self.session_key)
+        r, soup = self.scrape_page(self.mask + "rebootinfo.cgi?sessionKey=%s" % self.session_key())
         print "Router has been succesfully rebooted."
 
 

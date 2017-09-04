@@ -11,7 +11,7 @@ def show_dhcpinfo():
     '''
     Shows DHCP information.
     '''
-    ptcl.get_dhcpinfo()
+    ptcl.dhcpinfo()
     print tabulate({"HOSTNAME": ptcl.dev_hostname, "MAC-ADDRESSES": ptcl.mac_address}, headers=['HOSTNAME', 'MAC-ADDRESSES'], tablefmt='fancy_grid')
     print "\n\n\t\tTotal Devices Connected Today are: [%s].\n\n" % len(ptcl.dev_hostname)
 
@@ -20,8 +20,8 @@ def show_active_dev():
       '''
       Shows active devices (Mac Addresses) and their hostnames.
       '''
-      ptcl.get_stationinfo()
-      ptcl.get_dhcpinfo()
+      ptcl.stationinfo()
+      ptcl.dhcpinfo()
       ptcl.host_and_mac = tuple(zip(ptcl.dev_hostname, ptcl.mac_address))
       hostnames = []
       display_list = []
@@ -80,7 +80,6 @@ def main():
         my_macs = configure.get_alias()
         if args.block:
             # print "Calling blocker Function"
-            ptcl.key()
             if args.block in my_macs.iterkeys():
                 # print "Calling blocker function - AUTOMATED MODE."
                 ptcl.block_dev(my_macs[args.block.lower()])
@@ -105,7 +104,7 @@ def main():
 
         elif args.restart:
             # print "Calling restart Function"
-            ptcl.reboot_router()
+            ptcl.reboot()
 
         elif args.show_dhcp:
             # print "Calling DHCP_info Function"
