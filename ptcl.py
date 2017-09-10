@@ -11,7 +11,7 @@ def show_dhcpinfo():
     '''
     Shows DHCP information.
     '''
-    ptcl.get_dhcpinfo()
+    ptcl.dhcpinfo()
     print tabulate({"HOSTNAME": ptcl.dev_hostname, "MAC-ADDRESSES": ptcl.mac_address}, headers=['HOSTNAME', 'MAC-ADDRESSES'], tablefmt='fancy_grid')
     print "\n\n\t\tTotal Devices Connected Today are: [%s].\n\n" % len(ptcl.dev_hostname)
 
@@ -20,8 +20,8 @@ def show_active_dev():
       '''
       Shows active devices (Mac Addresses) and their hostnames.
       '''
-      ptcl.get_stationinfo()
-      ptcl.get_dhcpinfo()
+      ptcl.stationinfo()
+      ptcl.dhcpinfo()
       ptcl.host_and_mac = tuple(zip(ptcl.dev_hostname, ptcl.mac_address))
       hostnames = []
       display_list = []
@@ -50,7 +50,7 @@ def show_blocked_dev():
     for i in soup.findAll('td'):
         if not i.find("input"):
             if Router.mac_adr_regex.search(i.text):
-                print i.text + '\n'
+                print tabulate([[i.text]], headers=["BLOCKED-DEV"], tablefmt="fancy_grid")
 
 
 def main():
@@ -76,74 +76,66 @@ def main():
         configure.config_check()
         sys.exit("Please Re-run.")
 
-    if args.cli == 'False':
-        my_macs = configure.get_alias()
-        if args.block:
-            # print "Calling blocker Function"
-            ptcl.key()
-            if args.block in my_macs.iterkeys():
-                # print "Calling blocker function - AUTOMATED MODE."
-                ptcl.block_dev(my_macs[args.block.lower()])
-                print "%s has been blocked." % args.block.capitalize()
-                if args.block not in my_macs.iterkeys():
-                    print "User not found."
-            elif args.block not in my_macs.iterkeys():
-                print "User not found."
+    my_macs = configure.get_alias()
 
-        elif args.unblock:
-            if args.unblock in my_macs.iterkeys():
-                # print "Calling unblocker function - AUTOMATED MODE"
-                ptcl.unblock_dev(my_macs[args.unblock.lower()])
-                print "%s has been unblocked." % args.unblock.capitalize()
-            elif args.unblock not in my_macs.iterkeys():
-                print "User not found."
-
-        elif args.active_devices:
-            # print "Calling Station info Function"
-            ptcl.get_stationinfo()
-            print "Currently active devices are:", len(ptcl.active_dev)
-
-        elif args.restart:
-            # print "Calling restart Function"
-            ptcl.reboot_router()
-
-        elif args.show_dhcp:
-            # print "Calling DHCP_info Function"
-            show_dhcpinfo()
-
-        elif args.blocked_dev:
-            show_blocked_dev()
-
-        elif args.set_alias:
-            show_active_dev()
-            configure.set_alias()
-
-        elif args.show_active == '.':
-            # print "Calling show_active Function"
-            show_active_dev()
-
-        else:
-            print "Invalid Argument"
-
-
-    elif not args.cli:
-        if not args.block:
-            # print "Calling blocker function - CLI MODE."
+    if args.block:
+        if args.block == '1':
             name = show_active_dev()
             ptcl.host_and_mac = dict(ptcl.host_and_mac)
             dev_mac = int(raw_input("Please Enter Device Number: ")) - 1
             ptcl.block_dev(ptcl.host_and_mac[name[dev_mac]])
             print "%s has been blocked." % name[dev_mac].capitalize()
 
+        elif args.block != '1' and args.block in my_macs.iterkeys():
+            # print "Calling blocker function - AUTOMATED MODE."
+            ptcl.block_dev(my_macs[args.block.lower()])
+            print "%s has been blocked." % args.block.capitalize()
+            if args.block not in my_macs.iterkeys():
+                print "User not found."
 
-        elif not args.unblock:
-            # print "Calling unblocker function - CLI MODE."
-            name = show_active_dev()
-            ptcl.host_and_mac = dict(ptcl.host_and_mac)
+        elif args.block != '1' and args.block not in my_macs.iterkeys():
+            print "User not found."
+
+    elif args.unblock:
+        if args.unblock == '1':
+            show_blocked_dev()
             dev_mac = raw_input("Please enter device mac address: ")
             ptcl.unblock_dev(dev_mac)
-            # ptcl.unblock_dev(ptcl.host_and_mac[name[dev_mac]])
-            print "%s has been unblocked." % name[dev_mac].capitalize()
+            print "%s has been unblocked." % dev_mac
 
+        elif args.unblock != 1 and args.unblock in my_macs.iterkeys():
+            # print "Calling unblocker function - AUTOMATED MODE"
+            ptcl.unblock_dev(my_macs[args.unblock.lower()])
+            print "%s has been unblocked." % args.unblock.capitalize()
+
+        elif args.unblock != 1 and args.unblock not in my_macs.iterkeys():
+            print "User not found."
+
+    elif args.active_devices:
+        # print "Calling Station info Function"
+        ptcl.get_stationinfo()
+        print "Currently active devices are:", len(ptcl.active_dev)
+
+    elif args.restart:
+        # print "Calling restart Function"
+        ptcl.reboot()
+
+    elif args.show_dhcp:
+        # print "Calling DHCP_info Function"
+        show_dhcpinfo()
+
+    elif args.blocked_dev:
+        show_blocked_dev()
+
+    elif args.set_alias:
+        show_active_dev()
+        configure.set_alias()
+
+    elif args.show_active == '.':
+        # print "Calling show_active Function"
+        show_active_dev()
+
+    else:
+        print "Invalid Argument"
 
 main()
