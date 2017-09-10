@@ -7,7 +7,7 @@ Example:
 >>> from router import Router
 >>> router = Router('192.168.1.1')
 >>> router.reboot() # Reboots router
->>> router.active_dev() # Shows devices which are currently connected to the router
+>>> router.active_dev() # Returns a list of active devices.
 '''
 import requests
 import bs4
@@ -76,6 +76,7 @@ class Router(object):
                 '''
                 self.dev_hostname.append(td[td.index(i) - 1].text.encode('ascii'))
                 self.mac_address.append(i.text.encode('ascii'))
+        return (self.dev_hostname, self.mac_address)
 
 
     def stationinfo(self):
@@ -86,6 +87,7 @@ class Router(object):
         for i in soup.findAll('td'):
             if self.mac_adr_regex.search(i.text.strip()):
                 self.active_dev.append(i.text.strip().lower().encode('ascii'))
+        return self.active_dev
 
 
     def block_dev(self, devmac):
