@@ -2,10 +2,6 @@
 
 A PTCL-Router API to interact with default router interface.
 
-# Preview:
-
-[![asciicast](https://asciinema.org/a/KiWYs8wuLPBPSKKPCaetDLxbP.png)](https://asciinema.org/a/KiWYs8wuLPBPSKKPCaetDLxbP)
-
 # Usage:
 
 ```

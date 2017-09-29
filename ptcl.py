@@ -113,7 +113,7 @@ def main():
 
     elif args.active_devices:
         # print "Calling Station info Function"
-        ptcl.get_stationinfo()
+        ptcl.stationinfo()
         print "Currently active devices are:", len(ptcl.active_dev)
 
     elif args.restart:

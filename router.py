@@ -25,8 +25,7 @@ class Router(object):
         self.mask = "http://" + mask + '/'
         self.username = username
         self.password = password
-        self.dev_hostname = []  # Devices Hostname
-        self.mac_address = []   # Devices Mac Address
+        self.dev_info = {}      # Devices info
         self.active_dev = []    # Active Devices on Wi-Fi
         self.host_and_mac = []  # Mac Addresses and Hostnames
         self.session = requests.Session()
@@ -42,8 +41,9 @@ class Router(object):
             request_url = self.session.get(url)
             if request_url.status_code == 401:
                 sys.exit("Username or Password is incorrect.")
-            html_soup = bs4.BeautifulSoup(request_url.content, 'html.parser')
-            return request_url, html_soup
+            elif request_url.status_code == 200:
+                html_soup = bs4.BeautifulSoup(request_url.content, 'lxml')
+                return request_url, html_soup
         except requests.exceptions.ConnectionError:
             print("Internet Connection Down.\nExiting...")
             sys.exit()
@@ -62,7 +62,7 @@ class Router(object):
         '''
         Gets information from dhcp i.e., Mac Adresses and Hostnames.
         '''
-        r, soup = self.scrape_page(self.mask + 'dhcpinfo.html')
+
         td = soup.findAll('td')
         for i in td:
             if self.mac_adr_regex.search(i.text):
@@ -74,9 +74,13 @@ class Router(object):
                 index less than the current index of mac address, we obtain the
                 hostname and append it to the dev_hostname list.
                 '''
-                self.dev_hostname.append(td[td.index(i) - 1].text.encode('ascii'))
-                self.mac_address.append(i.text.encode('ascii'))
-        return (self.dev_hostname, self.mac_address)
+                # Before mac_addresses, there is hostname
+                # After mac_addresses, there are local ip and expire time for
+                # the device connected
+                hostname = td[td.index(i) - 1].text
+                self.dev_info["Hostname"] = hostname
+                self.dev_info[hostname] = [i.text, td[td.index(i) + 1].text, td[td.index(i) + 2].text]
+        return (self.dev_info)
 
 
     def stationinfo(self):
