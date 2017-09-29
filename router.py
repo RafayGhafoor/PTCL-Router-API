@@ -21,7 +21,7 @@ class Router(object):
     mac_adr_regex = re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
 
 
-    def __init__(self, mask="192.168.1.1", username="admin", password="admin"):
+    def __init__(self, mask="192.168.10.1", username="admin", password="admin"):
         self.mask = "http://" + mask + '/'
         self.username = username
         self.password = password
@@ -33,7 +33,7 @@ class Router(object):
         self.sessionKey = ""
 
 
-    def scrape_page(self, url):
+    def scrape_page(self, url, create_soup='n'):
         '''
         Scrape given link and create a beautiful soup object.
         '''
@@ -42,8 +42,10 @@ class Router(object):
             if request_url.status_code == 401:
                 sys.exit("Username or Password is incorrect.")
             elif request_url.status_code == 200:
-                html_soup = bs4.BeautifulSoup(request_url.content, 'lxml')
-                return request_url, html_soup
+                if create_soup == 'y':
+                    html_soup = bs4.BeautifulSoup(request_url.content, 'lxml')
+                    return html_soup
+                return request_url
         except requests.exceptions.ConnectionError:
             print("Internet Connection Down.\nExiting...")
             sys.exit()
@@ -53,7 +55,7 @@ class Router(object):
         '''
         Gets session key from the html page.
         '''
-        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd")
+        r = self.scrape_page(url=self.mask + "wlmacflt.cmd")
         self.sessionKey = re.search(r'\d{3,30}', r.content).group().encode('ascii')
         return self.sessionKey
 
@@ -62,7 +64,7 @@ class Router(object):
         '''
         Gets information from dhcp i.e., Mac Adresses and Hostnames.
         '''
-
+        soup = self.scrape_page(url=self.mask + "dhcpinfo.html", create_soup='y')
         td = soup.findAll('td')
         for i in td:
             if self.mac_adr_regex.search(i.text):
@@ -87,36 +89,39 @@ class Router(object):
         '''
         Gets information about the connected devices.
         '''
-        r, soup = self.scrape_page(self.mask + "wlstationlist.cmd")
+        soup = self.scrape_page(url=self.mask + "wlstationlist.cmd", create_soup='y')
         for i in soup.findAll('td'):
             if self.mac_adr_regex.search(i.text.strip()):
                 self.active_dev.append(i.text.strip().lower().encode('ascii'))
         return self.active_dev
 
 
-    def block_dev(self, devmac):
+    def block(self, devmac):
         '''
         Block device using Mac Address.
         '''
-        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=add&wlFltMacAddr=%s&sessionKey=%s" % (devmac, self.session_key()))
+        requests.get(self.mask + "wlmacflt.cmd?action=add&wlFltMacAddr=%s&sessionKey=%s" % (devmac, self.session_key()))
 
 
-    def unblock_dev(self, udevmac):
+    def unblock(self, udevmac):
         '''
         Unblock device using Mac Address.
         '''
-        r, soup = self.scrape_page(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, self.session_key()))
+        requests.get(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, self.session_key()))
 
 
     def reboot(self):
         '''
         Reboots Router.
         '''
-        r, soup = self.scrape_page(self.mask + "rebootinfo.cgi?sessionKey=%s" % self.session_key())
-        print "Router has been succesfully rebooted."
+        r = requests.get(self.mask + "rebootinfo.cgi?sessionKey=%s" % self.session_key())
+        if r.status_code == 200:
+            print("Router has been succesfully rebooted.")
+        else:
+            print("Request not successful.")
 
 
-    def time_restriction(self):
+    def time_limit(self):
         '''
         Restricts user from using internet for limited time.
         '''
@@ -130,14 +135,7 @@ class Router(object):
         pass
 
 
-    def url_remove_filter(self):
-        '''
-        Removes url filter after specified time or when provided.
-        '''
-        pass
-
-
-    def change_passwd(self):
+    def passwd(self):
         '''
         Change the password of the router.
         '''

@@ -33,7 +33,7 @@ def write_config():
 
   with open('config.ini', 'w') as configfile:
       config.write(configfile)
-  print '\nConfiguration file Generated.'
+  print('\nConfiguration file Generated.')
 
 
 def set_alias():
@@ -55,7 +55,7 @@ def set_alias():
                 with open('config.ini', 'r+') as configfile:
                     config.write(configfile)
     else:
-        print "Already Present."
+        print("Already Present.")
 
 
 def get_alias():
