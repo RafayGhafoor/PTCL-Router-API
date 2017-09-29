@@ -14,6 +14,7 @@ import bs4
 import re
 import sys
 
+
 class Router(object):
     '''
     A PTCL router class.
@@ -121,11 +122,47 @@ class Router(object):
             print("Request not successful.")
 
 
-    def time_limit(self):
+    def time_limit(self, username="User_1", mac="", days="", start=1, end=24):
         '''
         Restricts user from using internet for limited time.
         '''
-        pass
+        # Set day to current day
+        # mon-tue
+        # mon-sun
+        # mon-mon (Fail)
+        def day_to_binary(days="", start_name='', end_name=''):
+            pass
+
+        days = days.split('-')
+        for keys, val in week_days.items():
+            if len(days) != 0 and len(days) < 2:
+                if len(days) == 0:
+                    scrape_page(self.mask, "todmngr.tod?action=add&username=%s&mac=%s&days=%s&start_time=%s&end_time=%s&sessionKey=%s"\
+                                                                                % (username, mac, week_days[days], start, end))
+                elif len(days) == 1:
+                    if days[0] == days[1]:
+                        scrape_page(self.mask, "todmngr.tod?action=add&username=%s&mac=%s&days=%s&start_time=%s&end_time=%s&sessionKey=%s"\
+                                                                                    % (username, mac, week_days["Everyday"], start, end))
+                    elif day[1]:
+                        pass    # Mon - Sunday, select the value from sunday and add it to the value preceding it.
+
+        week_days = {
+        "Mon": 1,
+        "Tue": 2,
+        "Wed": 4,
+        "Thu": 8,
+        "Fri": 16,
+        "Sat": 32,
+        "Sun": 64
+        "Everyday": 127}
+        username = ""
+        mac = ""
+        # Time should be converted to minutes.
+        start_time = ""
+        end_time = ""
+        # time_limit("Mon")
+        # Mon-Sun
+        # scrape_page(self.mask, todmngr.tod?action=add&username=hello&mac=64:5a:04:8d:38:bc&days=63&start_time=1&end_time=1389&sessionKey=1478055827)
 
 
     def url_filter(self):
