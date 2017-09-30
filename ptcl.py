@@ -7,14 +7,15 @@ import os
 from tabulate import tabulate
 
 ptcl = Router(password='123motorcross')
-def show_dhcpinfo():
-    '''
-    Shows DHCP information.
-    '''
-    # print(ptcl.dhcpinfo())
-    print(tabulate([ptcl.dhcpinfo()], headers=['HOSTNAME'], tablefmt='fancy_grid'))
-
-show_dhcpinfo()
+ptcl.time_limit(username="rafay", mac="something", days="Mon-Tue")
+# def show_dhcpinfo():
+#     '''
+#     Shows DHCP information.
+#     '''
+#     # print(ptcl.dhcpinfo())
+#     print(tabulate([ptcl.dhcpinfo()], headers=['HOSTNAME'], tablefmt='fancy_grid'))
+#
+# show_dhcpinfo()
 
 # def show_active_dev():
 #       '''

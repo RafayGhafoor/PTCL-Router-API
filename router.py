@@ -101,7 +101,7 @@ class Router(object):
         '''
         Block device using Mac Address.
         '''
-        requests.get(self.mask + "wlmacflt.cmd?action=add&wlFltMacAddr=%s&sessionKey=%s" % (devmac, self.session_key()))
+        requests.get(self.mask + "wlmacflt.cmd?action=add&rmLst=%s&sessionKey=%s" % (devmac, self.session_key()))
 
 
     def unblock(self, udevmac):
@@ -130,22 +130,6 @@ class Router(object):
         # mon-tue
         # mon-sun
         # mon-mon (Fail)
-        def day_to_binary(days="", start_name='', end_name=''):
-            pass
-
-        days = days.split('-')
-        for keys, val in week_days.items():
-            if len(days) != 0 and len(days) < 2:
-                if len(days) == 0:
-                    scrape_page(self.mask, "todmngr.tod?action=add&username=%s&mac=%s&days=%s&start_time=%s&end_time=%s&sessionKey=%s"\
-                                                                                % (username, mac, week_days[days], start, end))
-                elif len(days) == 1:
-                    if days[0] == days[1]:
-                        scrape_page(self.mask, "todmngr.tod?action=add&username=%s&mac=%s&days=%s&start_time=%s&end_time=%s&sessionKey=%s"\
-                                                                                    % (username, mac, week_days["Everyday"], start, end))
-                    elif day[1]:
-                        pass    # Mon - Sunday, select the value from sunday and add it to the value preceding it.
-
         week_days = {
         "Mon": 1,
         "Tue": 2,
@@ -153,13 +137,36 @@ class Router(object):
         "Thu": 8,
         "Fri": 16,
         "Sat": 32,
-        "Sun": 64
+        "Sun": 64,
         "Everyday": 127}
-        username = ""
-        mac = ""
         # Time should be converted to minutes.
-        start_time = ""
-        end_time = ""
+        lst = []
+        def day_to_binary(binary):
+            if 1 in lst:
+                return sum(lst)
+            lst.append(binary / 2)
+            return day_to_binary(binary / 2)
+
+        days = days.split('-')
+        for keys, val in week_days.items():
+            if days and len(days) < 3:
+                if len(days) == 1:
+                    print(self.mask, "todmngr.tod?action=add&username=%s&mac=%s&days=%s&start_time=%s&end_time=%s&sessionKey=%s"\
+                                                                                % (username, mac, week_days[days], start, end, self.session_key()))
+                    break
+                elif len(days) == 2 and days[0] in week_days and days[1] in week_days:
+                    if days[0] == days[1]:
+                        print(self.mask, "todmngr.tod?action=add&username=%s&mac=%s&days=%s&start_time=%s&end_time=%s&sessionKey=%s"\
+                                                                                    % (username, mac, week_days["Everyday"], start, end, self.session_key()))
+                        break
+                    elif days[0] != days[1]:
+                        print(self.mask, "todmngr.tod?action=add&username=%s&mac=%s&days=%s&start_time=%s&end_time=%s&sessionKey=%s"\
+                                                                                    % (username, mac, str(week_days[days[1]] + day_to_binary(week_days[days[1]])), str(start), str(end), self.session_key()))
+                        break
+                        # Mon - Sunday, select the value from sunday and add it to the value preceding it.
+                else:
+                    print("Specified day is not in week_days.")
+
         # time_limit("Mon")
         # Mon-Sun
         # scrape_page(self.mask, todmngr.tod?action=add&username=hello&mac=64:5a:04:8d:38:bc&days=63&start_time=1&end_time=1389&sessionKey=1478055827)
