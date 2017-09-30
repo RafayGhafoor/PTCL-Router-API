@@ -44,7 +44,7 @@ class Router(object):
         self.sessionKey = ""
 
 
-    def scrape_page(self, url='', soup='n'):
+    def scrape_page(self, url='', params='', soup='n'):
         '''
         Scrape given link and create a beautiful soup object.
         - url:  Url to scrape.
@@ -53,7 +53,7 @@ class Router(object):
         if not url:
             return
         try:
-            request_url = self.session.get(url)
+            request_url = self.session.get(url, params=params)
             if request_url.status_code == 401:
                 sys.exit("Username or Password is incorrect.")
             elif request_url.status_code == 200:
@@ -72,7 +72,7 @@ class Router(object):
         require session key for authentication.
         '''
         r = self.scrape_page(url=self.mask + "wlmacflt.cmd")
-        self.sessionKey = re.search(r'\d{3,30}', r.content).group().encode('ascii')
+        self.sessionKey = re.search(r'\d{3,30}', r.content.decode()).group()
         return self.sessionKey
 
 
@@ -128,7 +128,7 @@ class Router(object):
         Example:
         >>> router.block('xx:xx:xx:xx:xx:xx')
         '''
-        requests.get(self.mask + "wlmacflt.cmd?action=add&rmLst=%s&sessionKey=%s" % (devmac, self.session_key()))
+        self.session.get(self.mask + "wlmacflt.cmd?action=add&rmLst=%s&sessionKey=%s" % (devmac, self.session_key()))
 
 
     def unblock(self, udevmac):
@@ -139,21 +139,21 @@ class Router(object):
         Example:
         >>> router.unblock('xx:xx:xx:xx:xx:xx')
         '''
-        requests.get(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, self.session_key()))
+        self.session.get(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, self.session_key()))
 
     def reboot(self):
         '''
         Reboots Router.
         '''
 
-        r = requests.get(self.mask + "rebootinfo.cgi?sessionKey=%s" % self.session_key())
+        r = self.session.get(self.mask + "rebootinfo.cgi?sessionKey=%s" % self.session_key())
         if r.status_code == 200:
             print("Router has been succesfully rebooted.")
         else:
             print("Request not successful.")
 
 
-    def time_limit(self, username="User_1", mac="", days="", start=1, end=24):
+    def time_limit(self, username="User_1", mac="", days="", start="1", end="24"):
         '''
         Restricts user from using internet for limited time.
         Creates a user profile containing mac, days, start_time, end_time.
@@ -228,30 +228,32 @@ class Router(object):
             end_time = (end_time[0] * 60) + end_time[1]
             return start_time, end_time
 
+        gen_params = lambda days: {
+        'username': username,
+        'days': days, 'start_time': start,
+        'end_time': end, 'sessionKey': self.session_key()
+        }
 
+        start, end = convert_time(start_time=start, end_time=end)
         days = days.split('-')
+
         for keys, val in week_days.items():
             if days and len(days) < 3:
                 if len(days) == 1:
-                    print(self.mask, "todmngr.tod?action=add&username=%s&mac=%s&days=%s&start_time=%s&end_time=%s&sessionKey=%s"\
-                                                                                % (username, mac, week_days[days], start, end, self.session_key()))
+                    r = self.session.get(self.mask + 'todmngr.tod?action=add&mac=%s' % (mac), params=gen_params(days=week_days[days]))
                     break
+
                 elif len(days) == 2 and days[0] in week_days and days[1] in week_days:
                     if days[0] == days[1]:
-                        print(self.mask, "todmngr.tod?action=add&username=%s&mac=%s&days=%s&start_time=%s&end_time=%s&sessionKey=%s"\
-                                                                                    % (username, mac, week_days["Everyday"], start, end, self.session_key()))
+                        r = self.session.get(self.mask + 'todmngr.tod?action=add&mac=%s' % (mac), params=gen_params(days=week_days["Everyday"]))
                         break
+
                     elif days[0] != days[1]:
-                        print(self.mask, "todmngr.tod?action=add&username=%s&mac=%s&days=%s&start_time=%s&end_time=%s&sessionKey=%s"\
-                                                                                    % (username, mac, str(week_days[days[1]] + day_to_binary(week_days[days[1]])), str(start), str(end), self.session_key()))
+                        r = self.session.get(self.mask + 'todmngr.tod?action=add&mac=%s' % (mac), params=gen_params(days=str(week_days[days[1]])))
                         break
                         # Mon - Sunday, select the value from sunday and add it to the value preceding it.
                 else:
                     print("Specified day is not in week_days.")
-
-        # time_limit("Mon")
-        # Mon-Sun
-        # scrape_page(self.mask, todmngr.tod?action=add&username=hello&mac=64:5a:04:8d:38:bc&days=63&start_time=1&end_time=1389&sessionKey=1478055827)
 
 
     def url_filter(self):

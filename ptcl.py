@@ -7,7 +7,8 @@ import os
 from tabulate import tabulate
 
 ptcl = Router(password='123motorcross')
-ptcl.time_limit(username="rafay", mac="something", days="Mon-Tue")
+ptcl.time_limit(username="rafay1s", mac="64:5a:04:9d:38:ed", days="Mon-Mon")
+# ptcl.test_me()
 # def show_dhcpinfo():
 #     '''
 #     Shows DHCP information.
