@@ -189,6 +189,7 @@ class Router(object):
         num_lst = []
 
         def day_to_binary(integer):
+            # TODO: Add check for integer parameter.
             '''
             Takes an integer and divides it by 2, appends to the num_lst
             and returns sum of the num_lst when it reaches 1.
@@ -199,6 +200,7 @@ class Router(object):
             return day_to_binary(integer / 2)
 
         def convert_time(start_time="1", end_time="23:59"):
+            # TODO : Add test that the numbers after : shouldn't exceed 60 (minutes)
             '''
             Converts time to minutes.
             Takes time and splits it by ":", the first element before ":" is in
@@ -216,10 +218,15 @@ class Router(object):
                 # returns (13 * 60) + 00, (18 * 60) + 08
                 780, 1080
             '''
-
-            start_time = start.split(':')
-            end_time = end.split(':')
-
+            start_time = [int(i) for i in start_time.split(':')]
+            end_time = [int(i) for i in end_time.split(':')]
+            if len(start_time) == 1:
+                start_time.append(00)
+            if len(end_time) == 1:
+                end_time.append(00)
+            start_time = (start_time[0] * 60) + start_time[1]
+            end_time = (end_time[0] * 60) + end_time[1]
+            return start_time, end_time
 
 
         days = days.split('-')
