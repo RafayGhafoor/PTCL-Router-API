@@ -1,13 +1,18 @@
 '''
-A PTCL router class, which allows to interact with the router easily
-through terminal.
+A PTCL router class, which allows to interact with the router.
 
 Example:
-
+# router is used an instance of Router class in all examples.
 >>> from router import Router
->>> router = Router('192.168.1.1')
+>>> router = Router('192.168.1.1')      # Connects session for interacting with router
+>>>
 >>> router.reboot() # Reboots router
->>> router.active_dev() # Returns a list of active devices.
+>>> router.stationinfo() # Returns a list of active devices
+['macxxx', 'macxxx2', 'macxx3']
+
+>>> router.dhcpinfo() # Returns a dictionary object for dhcpinfo
+{'HOSTNAME': ['Mac', 'LocalIp', 'Expires']}
+{'my-computer': ['macxx', '192.168.10.1', '23 Hours, 59 Minutes']}
 '''
 import requests
 import bs4
@@ -18,8 +23,13 @@ import sys
 class Router(object):
     '''
     A PTCL router class.
+
+    To create connection to the router interface, call the class using these
+    arguments:
+            gateway, username, password
+    All the arguments are strings.
     '''
-    mac_adr_regex = re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
+    mac_pattern = re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
 
 
     def __init__(self, mask="192.168.10.1", username="admin", password="admin"):
@@ -34,16 +44,20 @@ class Router(object):
         self.sessionKey = ""
 
 
-    def scrape_page(self, url, create_soup='n'):
+    def scrape_page(self, url='', soup='n'):
         '''
         Scrape given link and create a beautiful soup object.
+        - url:  Url to scrape.
+        - soup: "n" to not create soup object and only return request response.
         '''
+        if not url:
+            return
         try:
             request_url = self.session.get(url)
             if request_url.status_code == 401:
                 sys.exit("Username or Password is incorrect.")
             elif request_url.status_code == 200:
-                if create_soup == 'y':
+                if soup == 'y':
                     html_soup = bs4.BeautifulSoup(request_url.content, 'lxml')
                     return html_soup
                 return request_url
@@ -54,7 +68,8 @@ class Router(object):
 
     def session_key(self):
         '''
-        Gets session key from the html page.
+        Gets session key from the html page for interacting with forms which
+        require session key for authentication.
         '''
         r = self.scrape_page(url=self.mask + "wlmacflt.cmd")
         self.sessionKey = re.search(r'\d{3,30}', r.content).group().encode('ascii')
@@ -63,12 +78,20 @@ class Router(object):
 
     def dhcpinfo(self):
         '''
-        Gets information from dhcp i.e., Mac Adresses and Hostnames.
+        Gets information from dhcp page.
+        Format:
+            HOSTNAME | MAC | LOCAL IP | EXPIRES IN
+
+        Example:
+        >>> my-pc | xx:xx..| 192.168..| 19 Hours ...
+
+        Return:
+            self.dev_info (Dictionary object)
         '''
         soup = self.scrape_page(url=self.mask + "dhcpinfo.html", create_soup='y')
         td = soup.findAll('td')
         for i in td:
-            if self.mac_adr_regex.search(i.text):
+            if self.mac_pattern.search(i.text):
                 '''
                 The HTML page contains hostnames and mac addresses right next
                 to each other in the form of table. We search in the tables list
@@ -92,7 +115,7 @@ class Router(object):
         '''
         soup = self.scrape_page(url=self.mask + "wlstationlist.cmd", create_soup='y')
         for i in soup.findAll('td'):
-            if self.mac_adr_regex.search(i.text.strip()):
+            if self.mac_pattern.search(i.text.strip()):
                 self.active_dev.append(i.text.strip().lower().encode('ascii'))
         return self.active_dev
 
@@ -100,6 +123,10 @@ class Router(object):
     def block(self, devmac):
         '''
         Block device using Mac Address.
+        - devmac: Device mac address to block.
+
+        Example:
+        >>> router.block('xx:xx:xx:xx:xx:xx')
         '''
         requests.get(self.mask + "wlmacflt.cmd?action=add&rmLst=%s&sessionKey=%s" % (devmac, self.session_key()))
 
@@ -107,14 +134,18 @@ class Router(object):
     def unblock(self, udevmac):
         '''
         Unblock device using Mac Address.
+        - udevmac: Device mac address to unblock.
+
+        Example:
+        >>> router.unblock('xx:xx:xx:xx:xx:xx')
         '''
         requests.get(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, self.session_key()))
-
 
     def reboot(self):
         '''
         Reboots Router.
         '''
+
         r = requests.get(self.mask + "rebootinfo.cgi?sessionKey=%s" % self.session_key())
         if r.status_code == 200:
             print("Router has been succesfully rebooted.")
@@ -125,11 +156,27 @@ class Router(object):
     def time_limit(self, username="User_1", mac="", days="", start=1, end=24):
         '''
         Restricts user from using internet for limited time.
+        Creates a user profile containing mac, days, start_time, end_time.
+        - username: Create a profile for time limit of the provided username.
+        - mac:      Device mac address on which time limit is applied.
+        - days:     Day/days on which the time limit is applied.
+        # Time is 24-hour format.
+        - start:    Start time of device connection limit.
+        - end:      End time of device connection limit.
+
+        Example:
+        Creates a profile named as User-1 and sets time limit for mac [x] at
+        Monday beginning from 3 am to 6 pm.
+        >>> router.time_limit(username="User-1", mac="xx:xx...", days="Mon", start=3, end=6)
+
+        Sets time limit from Monday to Friday.
+        >>> router.time_limit(username="User-1", mac="xx:xx...", days="Mon-Fri", start=3, end=6)
         '''
-        # Set day to current day
-        # mon-tue
-        # mon-sun
-        # mon-mon (Fail)
+
+        # The day field in the request takes the power of 2 for the corresponding day in week.
+        # Monday is    2^0
+        # Tuesday is   2^1
+        # Wednesday is 2^2
         week_days = {
         "Mon": 1,
         "Tue": 2,
@@ -139,13 +186,41 @@ class Router(object):
         "Sat": 32,
         "Sun": 64,
         "Everyday": 127}
-        # Time should be converted to minutes.
-        lst = []
-        def day_to_binary(binary):
-            if 1 in lst:
-                return sum(lst)
-            lst.append(binary / 2)
-            return day_to_binary(binary / 2)
+        num_lst = []
+
+        def day_to_binary(integer):
+            '''
+            Takes an integer and divides it by 2, appends to the num_lst
+            and returns sum of the num_lst when it reaches 1.
+            '''
+            if 1 in num_lst:
+                return sum(num_lst)
+            num_lst.append(integer / 2)
+            return day_to_binary(integer / 2)
+
+        def convert_time(start_time="1", end_time="23:59"):
+            '''
+            Converts time to minutes.
+            Takes time and splits it by ":", the first element before ":" is in
+            hour and the second element is in minutes.
+
+            Parameters:
+            - start_time: start time to apply limit from. Eg: 1:00 (am)
+            - end_time:   end time to apply limit till. Eg: 13:00 (pm)
+
+            Return (Integer):
+                sum of start_time and end_time in format (Hours * 60 + minutes).
+
+            Example:
+            >>> convert_time(13:00, 18:08)
+                # returns (13 * 60) + 00, (18 * 60) + 08
+                780, 1080
+            '''
+
+            start_time = start.split(':')
+            end_time = end.split(':')
+
+
 
         days = days.split('-')
         for keys, val in week_days.items():
