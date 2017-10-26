@@ -106,7 +106,7 @@ class Router(object):
                 hostname = td[td.index(i) - 1].text
                 self.dev_info["Hostname"] = hostname
                 self.dev_info[hostname] = [i.text, td[td.index(i) + 1].text, td[td.index(i) + 2].text]
-        return (self.dev_info)
+        return self.dev_info
 
 
     def stationinfo(self):
@@ -140,6 +140,7 @@ class Router(object):
         >>> router.unblock('xx:xx:xx:xx:xx:xx')
         '''
         self.session.get(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, self.session_key()))
+
 
     def reboot(self):
         '''
@@ -188,16 +189,18 @@ class Router(object):
         "Everyday": 127}
         num_lst = []
 
-        def day_to_binary(integer):
+        def bin_to_dec(integer):
             # TODO: Add check for integer parameter.
             '''
             Takes an integer and divides it by 2, appends to the num_lst
             and returns sum of the num_lst when it reaches 1.
             '''
+            # if not isinstance(integer, int):
+            #     raise Exception
             if 1 in num_lst:
                 return sum(num_lst)
             num_lst.append(integer / 2)
-            return day_to_binary(integer / 2)
+            return bin_to_dec(integer / 2)
 
         def convert_time(start_time="1", end_time="23:59"):
             # TODO : Add test that the numbers after : shouldn't exceed 60 (minutes)
@@ -224,9 +227,11 @@ class Router(object):
                 start_time.append(00)
             if len(end_time) == 1:
                 end_time.append(00)
+            # if end_time[0] > 24 or start_time[0] > 24 or end_time[1] > 60 or start_time[1] > 60:
+                # raise custom Exception
             start_time = (start_time[0] * 60) + start_time[1]
             end_time = (end_time[0] * 60) + end_time[1]
-            return start_time, end_time
+            return (start_time, end_time)
 
         gen_params = lambda days: {
         'username': username,
@@ -240,16 +245,16 @@ class Router(object):
         for keys, val in week_days.items():
             if days and len(days) < 3:
                 if len(days) == 1:
-                    r = self.session.get(self.mask + 'todmngr.tod?action=add&mac=%s' % (mac), params=gen_params(days=week_days[days]))
+                    self.session.get(self.mask + 'todmngr.tod?action=add&mac=%s'.format(mac), params=gen_params(days=week_days[days]))
                     break
 
                 elif len(days) == 2 and days[0] in week_days and days[1] in week_days:
                     if days[0] == days[1]:
-                        r = self.session.get(self.mask + 'todmngr.tod?action=add&mac=%s' % (mac), params=gen_params(days=week_days["Everyday"]))
+                        self.session.get(self.mask + 'todmngr.tod?action=add&mac=%s'.format(mac), params=gen_params(days=week_days["Everyday"]))
                         break
 
                     elif days[0] != days[1]:
-                        r = self.session.get(self.mask + 'todmngr.tod?action=add&mac=%s' % (mac), params=gen_params(days=str(week_days[days[1]])))
+                        self.session.get(self.mask + 'todmngr.tod?action=add&mac=%s'.format(mac), params=gen_params(days=str(week_days[days[1]])))
                         break
                         # Mon - Sunday, select the value from sunday and add it to the value preceding it.
                 else:
