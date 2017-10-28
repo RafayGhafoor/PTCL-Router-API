@@ -1,249 +1,498 @@
-MENU_ADVANCED_SETUP	http://192.168.1.1/wancfg.cmd
-MENU_WAN	http://192.168.1.1/wancfg.cmd
-MENU_WAN_3G_CFG	http://192.168.1.1/wan3gcfgview.html
-MENU_ADVANCED_SETUP	http://192.168.1.1/dslatm.cmd
-MENU_LAYER2_INTERFACE	http://192.168.1.1/dslatm.cmd
-MENU_DSL_ATM_INTERFACE	http://192.168.1.1/dslatm.cmd
-MENU_ADVANCED_SETUP	http://192.168.1.1/dslptm.cmd
-MENU_LAYER2_INTERFACE	http://192.168.1.1/dslptm.cmd
-MENU_DSL_PTM_INTERFACE	http://192.168.1.1/dslptm.cmd
-MENU_ADVANCED_SETUP	http://192.168.1.1/ethwan.html
-MENU_LAYER2_INTERFACE	http://192.168.1.1/ethwan.html
-MENU_ETH_INTERFACE	http://192.168.1.1/ethwan.html
-MENU_ADVANCED_SETUP	http://192.168.1.1/mocawan.cmd
-MENU_LAYER2_INTERFACE	http://192.168.1.1/mocawan.cmd
-MENU_MOCA_INTERFACE	http://192.168.1.1/mocawan.cmd
-MENU_ADVANCED_SETUP	http://192.168.1.1/wancfg.cmd
-MENU_WAN	http://192.168.1.1/wancfg.cmd
-MENU_WAN_3G_CFG	http://192.168.1.1/wan3gcfgview.html
-MENU_VPN	http://192.168.1.1/l2tpacwan.cmd
-MENU_VPN_L2TPAC	http://192.168.1.1/l2tpacwan.cmd
-MENU_LAN	http://192.168.1.1/lancfg2.html
-MENU_LANCFG	http://192.168.1.1/lancfg2.html
-MENU_LAN6	http://192.168.1.1/ipv6lancfg.html
-MENU_LAN	http://192.168.1.1/lancfg2.html
-MENU_MOCA_CONFIGURATION	http://192.168.1.1/mocacfg.html
-MENU_SC_NAT	http://192.168.1.1/scvrtsrv.cmd?action=view
-MENU_SC_VIRTUAL_SERVER	http://192.168.1.1/scvrtsrv.cmd?action=view
-MENU_SC_PORT_TRIGGER	http://192.168.1.1/scprttrg.cmd?action=view
-MENU_SC_DMZ_HOST	http://192.168.1.1/scdmz.html
-MENU_MULTI_NAT	http://192.168.1.1/multinat.cmd?action=view
-MENU_SC_SECURITY	http://192.168.1.1/scoutflt.cmd?action=view
-MENU_SC_IP_FILTER	http://192.168.1.1/scoutflt.cmd?action=view
-MENU_SC_OUTGOING	http://192.168.1.1/scoutflt.cmd?action=view
-MENU_SC_INCOMING	http://192.168.1.1/scinflt.cmd?action=view
-MENU_MAC_FILTER	http://192.168.1.1/scmacflt.cmd?action=view
-MENU_PARENTAL_CNTL	http://192.168.1.1/todmngr.tod?action=view
-MENU_TOD	http://192.168.1.1/todmngr.tod?action=view
-MENU_URLFILTER	http://192.168.1.1/urlfilter.cmd?action=view
-MENU_QOS	http://192.168.1.1/qosqmgmt.html
-MENU_QOS_QUEUE	http://192.168.1.1/qosqueue.cmd?action=view
-MENU_QOS_CLASS	http://192.168.1.1/qoscls.cmd?action=view
-MENU_ROUTING	http://192.168.1.1/rtdefaultcfg.html
-MENU_RT_DEFAULT_ROUTE	http://192.168.1.1/rtdefaultcfg.html
-MENU_RT_STATIC_ROUTE	http://192.168.1.1/rtroutecfg.cmd?action=viewcfg
-MENU_POLICY_ROUTING	http://192.168.1.1/prmngr.cmd?action=view
-MENU_RT_RIP	http://192.168.1.1/ripcfg.cmd?action=view
-MENU_DNS	http://192.168.1.1/dnscfg.html
-MENU_DNS_SETUP	http://192.168.1.1/dnscfg.html
-MENU_DDNS	http://192.168.1.1/ddnsmngr.cmd
-MENU_DSL	http://192.168.1.1/adslcfgc.html
-MENU_DSL	http://192.168.1.1/adslcfg.html
-MENU_DSL	http://192.168.1.1/xdslcfg.html
-MENU_DSL_BONDING	http://192.168.1.1/dslbondingcfg.html
-MENU_UPNP	http://192.168.1.1/upnpcfg.html
-MENU_DNSPROXY	http://192.168.1.1/dnsproxycfg.html
-MENU_IPP	http://192.168.1.1/ippcfg.html
-MENU_PPTPCLIENT	http://192.168.1.1/pptpclient.html
-MENU_DLNA	http://192.168.1.1/dlnacfg.html
+MENU_ADVANCED_SETUP		http://192.168.1.1/wancfg.cmd
+
+MENU_WAN			http://192.168.1.1/wancfg.cmd
+
+MENU_WAN_3G_CFG			http://192.168.1.1/wan3gcfgview.html
+
+MENU_ADVANCED_SETUP		http://192.168.1.1/dslatm.cmd
+
+MENU_LAYER2_INTERFACE		http://192.168.1.1/dslatm.cmd
+
+MENU_DSL_ATM_INTERFACE		http://192.168.1.1/dslatm.cmd
+
+MENU_ADVANCED_SETUP		http://192.168.1.1/dslptm.cmd
+
+MENU_LAYER2_INTERFACE		http://192.168.1.1/dslptm.cmd
+
+MENU_DSL_PTM_INTERFACE		http://192.168.1.1/dslptm.cmd
+
+MENU_ADVANCED_SETUP		http://192.168.1.1/ethwan.html
+
+MENU_LAYER2_INTERFACE		http://192.168.1.1/ethwan.html
+
+MENU_ETH_INTERFACE		http://192.168.1.1/ethwan.html
+
+MENU_ADVANCED_SETUP		http://192.168.1.1/mocawan.cmd
+
+MENU_LAYER2_INTERFACE		http://192.168.1.1/mocawan.cmd
+
+MENU_MOCA_INTERFACE		http://192.168.1.1/mocawan.cmd
+
+MENU_ADVANCED_SETUP		http://192.168.1.1/wancfg.cmd
+
+MENU_WAN			http://192.168.1.1/wancfg.cmd
+
+MENU_WAN_3G_CFG			http://192.168.1.1/wan3gcfgview.html
+
+MENU_VPN			http://192.168.1.1/l2tpacwan.cmd
+
+MENU_VPN_L2TPAC			http://192.168.1.1/l2tpacwan.cmd
+
+MENU_LAN			http://192.168.1.1/lancfg2.html
+
+MENU_LANCFG			http://192.168.1.1/lancfg2.html
+
+MENU_LAN6			http://192.168.1.1/ipv6lancfg.html
+
+MENU_LAN			http://192.168.1.1/lancfg2.html
+
+MENU_MOCA_CONFIGURATION		http://192.168.1.1/mocacfg.html
+
+MENU_SC_NAT			http://192.168.1.1/scvrtsrv.cmd?action=view
+
+MENU_SC_VIRTUAL_SERVER		http://192.168.1.1/scvrtsrv.cmd?action=view
+
+MENU_SC_PORT_TRIGGER		http://192.168.1.1/scprttrg.cmd?action=view
+
+MENU_SC_DMZ_HOST		http://192.168.1.1/scdmz.html
+
+MENU_MULTI_NAT		http://192.168.1.1/multinat.cmd?action=view
+
+MENU_SC_SECURITY		http://192.168.1.1/scoutflt.cmd?action=view
+
+MENU_SC_IP_FILTER		http://192.168.1.1/scoutflt.cmd?action=view
+
+MENU_SC_OUTGOING		http://192.168.1.1/scoutflt.cmd?action=view
+
+MENU_SC_INCOMING		http://192.168.1.1/scinflt.cmd?action=view
+
+MENU_MAC_FILTER		http://192.168.1.1/scmacflt.cmd?action=view
+
+MENU_PARENTAL_CNTL		http://192.168.1.1/todmngr.tod?action=view
+
+MENU_TOD		http://192.168.1.1/todmngr.tod?action=view
+
+MENU_URLFILTER		http://192.168.1.1/urlfilter.cmd?action=view
+
+MENU_QOS		http://192.168.1.1/qosqmgmt.html
+
+MENU_QOS_QUEUE		http://192.168.1.1/qosqueue.cmd?action=view
+
+MENU_QOS_CLASS		http://192.168.1.1/qoscls.cmd?action=view
+
+MENU_ROUTING		http://192.168.1.1/rtdefaultcfg.html
+
+MENU_RT_DEFAULT_ROUTE		http://192.168.1.1/rtdefaultcfg.html
+
+MENU_RT_STATIC_ROUTE		http://192.168.1.1/rtroutecfg.cmd?action=viewcfg
+
+MENU_POLICY_ROUTING		http://192.168.1.1/prmngr.cmd?action=view
+
+MENU_RT_RIP		http://192.168.1.1/ripcfg.cmd?action=view
+
+MENU_DNS		http://192.168.1.1/dnscfg.html
+
+MENU_DNS_SETUP		http://192.168.1.1/dnscfg.html
+
+MENU_DDNS		http://192.168.1.1/ddnsmngr.cmd
+
+MENU_DSL		http://192.168.1.1/adslcfgc.html
+
+MENU_DSL		http://192.168.1.1/adslcfg.html
+
+MENU_DSL		http://192.168.1.1/xdslcfg.html
+
+MENU_DSL_BONDING		http://192.168.1.1/dslbondingcfg.html
+
+MENU_UPNP		http://192.168.1.1/upnpcfg.html
+
+MENU_DNSPROXY		http://192.168.1.1/dnsproxycfg.html
+
+MENU_IPP		http://192.168.1.1/ippcfg.html
+
+MENU_PPTPCLIENT		http://192.168.1.1/pptpclient.html
+
+MENU_DLNA		http://192.168.1.1/dlnacfg.html
+
+MENU_PACKET_ACCELERATION		http://192.168.1.1/packetacceleration.html
+
+MENU_WIRELESS_SETTINGS		http://192.168.1.1/wlItemsCgiCmd[0]
+
+MENU_WIRELESS_SETTINGS		http://192.168.1.1/wlItemsCgiCmd[0]
+
+MENU_WL_BASIC		http://192.168.1.1/wlcfg.html
+
+MENU_WL_SECURITY		http://192.168.1.1/wlsecurity.html
+
+MENU_WL_MAC_FILTERING		http://192.168.1.1/wlmacflt.cmd?action=view
+
+MENU_WL_WDS		http://192.168.1.1/wlwds.cmd?action=view
+
+MENU_WL_ADVANCED		http://192.168.1.1/wlcfgadv.html
+
+MENU_WL_SES		http://192.168.1.1/wlses.html
+
+MENU_WL_STATION_LIST		http://192.168.1.1/wlstationlist.cmd
+
+MENU_WL_WAPI_AS		http://192.168.1.1/wlwapias.html
+
+MENU_WL_WAPI_AS		http://192.168.1.1/wlwapias.html
+
+MENU_STORAGESERVICE		http://192.168.1.1/storageservicecfg.cmd?view
+
+MENU_STORAGE_INFO		http://192.168.1.1/storageservicecfg.cmd?view
+
+MENU_STORAGE_USERACCOUNT		http://192.168.1.1/storageuseraccountcfg.cmd?view
+
+MENU_VOICE_SETTINGS		http://192.168.1.1/voicemgcp_basic.html
+
+MENU_VOICE_MGCP		http://192.168.1.1/voicemgcp_basic.html
+
+MENU_VOICE_NTR		http://192.168.1.1/voicentr.html
+
+MENU_VOICE_STATS		http://192.168.1.1/voicestats45.html
+
+MENU_VOICE_SETTINGS		http://192.168.1.1/voiceh248_status.html
+
+MENU_VOICE_H248_STATUS		http://192.168.1.1/voiceh248_status.html
+
+MENU_VOICE_H248_BASIC		http://192.168.1.1/voiceh248_basic.html
+
+MENU_VOICE_H248_ADVANCED		http://192.168.1.1/voiceh248_advanced.html
+
+MENU_VOICE_SETTINGS		http://192.168.1.1/voicesip_basic.html
+
+MENU_VOICE_SETTINGS		http://192.168.1.1/voicesip_status.html
+
+MENU_VOICE_SIP_STATUS		http://192.168.1.1/voicesip_status.html
+
+MENU_VOICE_SIP_BASIC		http://192.168.1.1/voicesip_basic.html
+
+MENU_VOICE_SIP_ADVANCED		http://192.168.1.1/voicesip_advanced.html
+
+MENU_VOICE_SIP_EXTRA		http://192.168.1.1/voicesip_extra.html
+
+MENU_VOICE_SIP_DEBUG		http://192.168.1.1/voicesip_debug.html
+
+MENU_VOICE_NTR		http://192.168.1.1/voicentr.html
+
+MENU_VOICE_DECT		http://192.168.1.1/voicedect.html
+
+MENU_INTF_GROUPING		http://192.168.1.1/portmap.cmd
+
+MENU_IP_TUNNEL		http://192.168.1.1/tunnelcfg.cmd?action=viewcfg
+
+MENU_6IN4_TUNNEL		http://192.168.1.1/tunnelcfg.cmd?action=viewcfg
+
+MENU_4IN6_TUNNEL		http://192.168.1.1/tunnelcfg.cmd?action=view
+
+MENU_SC_IPSEC		http://192.168.1.1/ipsec.cmd?action=view
+
+MENU_CERT		http://192.168.1.1/certlocal.cmd?action=view
+
+MENU_CERT_LOCAL		http://192.168.1.1/certlocal.cmd?action=view
+
+MENU_CERT_CA		http://192.168.1.1/certca.cmd?action=view
+
+MENU_STANDBY		http://192.168.1.1/standby.html
+
+MENU_PWRMNGT		http://192.168.1.1/pwrmngt.html
+
+MENU_MULTICAST		http://192.168.1.1/multicast.html
+
+MENU_DIAGNOSTICS		http://192.168.1.1/diag.html
+
+MENU_DIAGNOSTICS		http://192.168.1.1/diag.html
+
+MENU_DIAGP8021AG		http://192.168.1.1/diag8021ag.html
+
+MENU_MANAGEMENT		http://192.168.1.1/backupsettings.html
+
+MENU_TL_SETTINGS		http://192.168.1.1/backupsettings.html
+
+MENU_TL_SETTINGS_BACKUP		http://192.168.1.1/backupsettings.html
+
+MENU_TL_SETTINGS_UPDATE		http://192.168.1.1/updatesettings.html
+
+MENU_TL_SETTINGS_DEFAULT		http://192.168.1.1/defaultsettings.html
+
+MENU_TL_SYSTEM_LOG		http://192.168.1.1/logintro.html
+
+MENU_TL_SNMP		http://192.168.1.1/snmpconfig.html
+
+MENU_TR69C		http://192.168.1.1/tr69cfg.html
+
+MENU_OMCI_CFG		http://192.168.1.1/omcicfg.cmd?action=view
+
+MENU_OMCI_GET_SET		http://192.168.1.1/omcicfg.cmd?action=view
+
+MENU_OMCI_CREATE		http://192.168.1.1/omcicreate.cmd?action=view
+
+MENU_OMCI_GET_NEXT		http://192.168.1.1/omcigetnext.cmd?action=view
+
+MENU_OMCI_MACRO		http://192.168.1.1/omcimacro.cmd?action=view
+
+MENU_OMCI_DOWNLOAD		http://192.168.1.1/omcidownload.html
+
+MENU_OMCI_SYSTEM		http://192.168.1.1/omcisystem.html
+
+MENU_SNTP		http://192.168.1.1/sntpcfg.html
+
+MENU_ACC_CNTR		http://192.168.1.1/password.html
+
+MENU_ACC_CNTR_PASSWORD		http://192.168.1.1/password.html
+
+MENU_ACC_CNTR_SRVCNTR		http://192.168.1.1/scsrvcntr.html
+
+MENU_TL_UPDATE_SOFTWARE		http://192.168.1.1/upload.html
+
+MENU_RESET_ROUTER		http://192.168.1.1/resetrouter.html
+
+MENU_ADVANCED_SETUP		http://192.168.1.1/wancfg.cmd
+
+MENU_WAN		http://192.168.1.1/wancfg.cmd
+
+MENU_WAN_3G_CFG		http://192.168.1.1/wan3gcfgview.html
+
+MENU_ADVANCED_SETUP		http://192.168.1.1/dslatm.cmd
+
+MENU_LAYER2_INTERFACE		http://192.168.1.1/dslatm.cmd
+
+MENU_DSL_ATM_INTERFACE		http://192.168.1.1/dslatm.cmd
+
+MENU_ADVANCED_SETUP		http://192.168.1.1/dslptm.cmd
+
+MENU_LAYER2_INTERFACE		http://192.168.1.1/dslptm.cmd
+
+MENU_DSL_PTM_INTERFACE		http://192.168.1.1/dslptm.cmd
+
+MENU_ADVANCED_SETUP		http://192.168.1.1/ethwan.html
+
+MENU_LAYER2_INTERFACE		http://192.168.1.1/ethwan.html
+
+MENU_ETH_INTERFACE		http://192.168.1.1/ethwan.html
+
+MENU_ADVANCED_SETUP		http://192.168.1.1/mocawan.cmd
+
+MENU_LAYER2_INTERFACE		http://192.168.1.1/mocawan.cmd
+
+MENU_MOCA_INTERFACE		http://192.168.1.1/mocawan.cmd
+
+MENU_ADVANCED_SETUP		http://192.168.1.1/wancfg.cmd
+
+MENU_WAN		http://192.168.1.1/wancfg.cmd
+
+MENU_WAN_3G_CFG		http://192.168.1.1/wan3gcfgview.html
+
+MENU_VPN		http://192.168.1.1/l2tpacwan.cmd
+
+MENU_VPN_L2TPAC		http://192.168.1.1/l2tpacwan.cmd
+
+MENU_LAN		http://192.168.1.1/lancfg2.html
+
+MENU_LANCFG		http://192.168.1.1/lancfg2.html
+
+MENU_LAN6		http://192.168.1.1/ipv6lancfg.html
+
+MENU_LAN		http://192.168.1.1/lancfg2.html
+
+MENU_MOCA_CONFIGURATION		http://192.168.1.1/mocacfg.html
+
+MENU_QOS		http://192.168.1.1/qosqmgmt.html
+
+MENU_QOS_QUEUE		http://192.168.1.1/qosqueue.cmd?action=view
+
+MENU_QOS_CLASS		http://192.168.1.1/qoscls.cmd?action=view
+
+MENU_ROUTING		http://192.168.1.1/rtdefaultcfg.html
+
+MENU_RT_DEFAULT_ROUTE		http://192.168.1.1/rtdefaultcfg.html
+
+MENU_RT_STATIC_ROUTE		http://192.168.1.1/rtroutecfg.cmd?action=viewcfg
+
+MENU_RT_RIP		http://192.168.1.1/ripcfg.cmd?action=view
+
+MENU_DNS		http://192.168.1.1/dnscfg.html
+
+MENU_DNS_SETUP		http://192.168.1.1/dnscfg.html
+
+MENU_DDNS		http://192.168.1.1/ddnsmngr.cmd
+
+MENU_DSL			http://192.168.1.1/adslcfgc.html
+
+MENU_DSL			http://192.168.1.1/adslcfg.html
+
+MENU_DSL			http://192.168.1.1/xdslcfg.html
+
+MENU_DSL_BONDING		http://192.168.1.1/dslbondingcfg.html
+
+MENU_IPP			http://192.168.1.1/ippcfg.html
+
+MENU_UPNP			http://192.168.1.1/upnpcfg.html
+
+MENU_DNSPROXY			http://192.168.1.1/dnsproxycfg.html
+
+MENU_STANDBY			http://192.168.1.1/standby.html
+
+MENU_PPTPCLIENT			http://192.168.1.1/pptpclient.html
+
 MENU_PACKET_ACCELERATION	http://192.168.1.1/packetacceleration.html
-MENU_WIRELESS_SETTINGS	http://192.168.1.1/wlItemsCgiCmd[0]
-MENU_WIRELESS_SETTINGS	http://192.168.1.1/wlItemsCgiCmd[0]
-MENU_WL_BASIC	http://192.168.1.1/wlcfg.html
-MENU_WL_SECURITY	http://192.168.1.1/wlsecurity.html
-MENU_WL_MAC_FILTERING	http://192.168.1.1/wlmacflt.cmd?action=view
-MENU_WL_WDS	http://192.168.1.1/wlwds.cmd?action=view
-MENU_WL_ADVANCED	http://192.168.1.1/wlcfgadv.html
-MENU_WL_SES	http://192.168.1.1/wlses.html
-MENU_WL_STATION_LIST	http://192.168.1.1/wlstationlist.cmd
-MENU_WL_WAPI_AS	http://192.168.1.1/wlwapias.html
-MENU_WL_WAPI_AS	http://192.168.1.1/wlwapias.html
-MENU_STORAGESERVICE	http://192.168.1.1/storageservicecfg.cmd?view
-MENU_STORAGE_INFO	http://192.168.1.1/storageservicecfg.cmd?view
+
+MENU_WIRELESS_SETTINGS		http://192.168.1.1/wlItemsCgiCmd[0]
+
+MENU_WIRELESS_SETTINGS		http://192.168.1.1/wlItemsCgiCmd[0]
+
+MENU_WL_BASIC			http://192.168.1.1/wlcfg.html
+
+MENU_WL_SECURITY		http://192.168.1.1/wlsecurity.html
+
+MENU_WL_MAC_FILTERING		http://192.168.1.1/wlmacflt.cmd?action=view
+
+MENU_WL_WDS			http://192.168.1.1/wlwds.cmd?action=view
+
+MENU_WL_ADVANCED		http://192.168.1.1/wlcfgadv.html
+
+MENU_WL_SES			http://192.168.1.1/wlses.html
+
+MENU_WL_STATION_LIST		http://192.168.1.1/wlstationlist.cmd
+
+MENU_WL_WAPI_AS			http://192.168.1.1/wlwapias.html
+
+MENU_WL_WAPI_AS			http://192.168.1.1/wlwapias.html
+
+MENU_STORAGESERVICE		http://192.168.1.1/storageservicecfg.cmd?view
+
+MENU_STORAGE_INFO		http://192.168.1.1/storageservicecfg.cmd?view
+
 MENU_STORAGE_USERACCOUNT	http://192.168.1.1/storageuseraccountcfg.cmd?view
-MENU_VOICE_SETTINGS	http://192.168.1.1/voicemgcp_basic.html
-MENU_VOICE_MGCP	http://192.168.1.1/voicemgcp_basic.html
-MENU_VOICE_NTR	http://192.168.1.1/voicentr.html
-MENU_VOICE_STATS	http://192.168.1.1/voicestats45.html
-MENU_VOICE_SETTINGS	http://192.168.1.1/voiceh248_status.html
-MENU_VOICE_H248_STATUS	http://192.168.1.1/voiceh248_status.html
-MENU_VOICE_H248_BASIC	http://192.168.1.1/voiceh248_basic.html
+
+MENU_VOICE_SETTINGS		http://192.168.1.1/voicemgcp_basic.html
+
+MENU_VOICE_MGCP			http://192.168.1.1/voicemgcp_basic.html
+
+MENU_VOICE_STATS		http://192.168.1.1/voicestats45.html
+
+MENU_VOICE_SETTINGS		http://192.168.1.1/voiceh248_status.html
+
+MENU_VOICE_H248_STATUS		http://192.168.1.1/voiceh248_status.html
+
+MENU_VOICE_H248_BASIC		http://192.168.1.1/voiceh248_basic.html
+
 MENU_VOICE_H248_ADVANCED	http://192.168.1.1/voiceh248_advanced.html
-MENU_VOICE_SETTINGS	http://192.168.1.1/voicesip_basic.html
-MENU_VOICE_SETTINGS	http://192.168.1.1/voicesip_status.html
-MENU_VOICE_SIP_STATUS	http://192.168.1.1/voicesip_status.html
-MENU_VOICE_SIP_BASIC	http://192.168.1.1/voicesip_basic.html
-MENU_VOICE_SIP_ADVANCED	http://192.168.1.1/voicesip_advanced.html
-MENU_VOICE_SIP_EXTRA	http://192.168.1.1/voicesip_extra.html
-MENU_VOICE_SIP_DEBUG	http://192.168.1.1/voicesip_debug.html
-MENU_VOICE_NTR	http://192.168.1.1/voicentr.html
-MENU_VOICE_DECT	http://192.168.1.1/voicedect.html
-MENU_INTF_GROUPING	http://192.168.1.1/portmap.cmd
-MENU_IP_TUNNEL	http://192.168.1.1/tunnelcfg.cmd?action=viewcfg
-MENU_6IN4_TUNNEL	http://192.168.1.1/tunnelcfg.cmd?action=viewcfg
-MENU_4IN6_TUNNEL	http://192.168.1.1/tunnelcfg.cmd?action=view
-MENU_SC_IPSEC	http://192.168.1.1/ipsec.cmd?action=view
-MENU_CERT	http://192.168.1.1/certlocal.cmd?action=view
-MENU_CERT_LOCAL	http://192.168.1.1/certlocal.cmd?action=view
-MENU_CERT_CA	http://192.168.1.1/certca.cmd?action=view
-MENU_STANDBY	http://192.168.1.1/standby.html
-MENU_PWRMNGT	http://192.168.1.1/pwrmngt.html
-MENU_MULTICAST	http://192.168.1.1/multicast.html
-MENU_DIAGNOSTICS	http://192.168.1.1/diag.html
-MENU_DIAGNOSTICS	http://192.168.1.1/diag.html
-MENU_DIAGP8021AG	http://192.168.1.1/diag8021ag.html
-MENU_MANAGEMENT	http://192.168.1.1/backupsettings.html
-MENU_TL_SETTINGS	http://192.168.1.1/backupsettings.html
-MENU_TL_SETTINGS_BACKUP	http://192.168.1.1/backupsettings.html
-MENU_TL_SETTINGS_UPDATE	http://192.168.1.1/updatesettings.html
+
+MENU_VOICE_SETTINGS		http://192.168.1.1/voicesip_basic.html
+
+MENU_VOICE_SETTINGS		http://192.168.1.1/voicesip_status.html
+
+MENU_VOICE_SIP_STATUS		http://192.168.1.1/voicesip_status.html
+
+MENU_VOICE_SIP_BASIC		http://192.168.1.1/voicesip_basic.html
+
+MENU_VOICE_SIP_ADVANCED		http://192.168.1.1/voicesip_advanced.html
+
+MENU_VOICE_SIP_EXTRA		http://192.168.1.1/voicesip_extra.html
+
+MENU_VOICE_SIP_DEBUG		http://192.168.1.1/voicesip_debug.html
+
+MENU_IP_TUNNEL			http://192.168.1.1/tunnelcfg.cmd?action=viewcfg
+
+MENU_6IN4_TUNNEL		http://192.168.1.1/tunnelcfg.cmd?action=viewcfg
+
+MENU_4IN6_TUNNEL		http://192.168.1.1/tunnelcfg.cmd?action=view
+
+MENU_PWRMNGT			http://192.168.1.1/pwrmngt.html
+
+MENU_MULTICAST			http://192.168.1.1/multicast.html
+
+MENU_DIAGNOSTICS		http://192.168.1.1/diag.html
+
+MENU_MANAGEMENT			http://192.168.1.1/backupsettings.html
+
+MENU_TL_SETTINGS		http://192.168.1.1/backupsettings.html
+
+MENU_TL_SETTINGS_BACKUP		http://192.168.1.1/backupsettings.html
+
+MENU_TL_SETTINGS_UPDATE		http://192.168.1.1/updatesettings.html
+
 MENU_TL_SETTINGS_DEFAULT	http://192.168.1.1/defaultsettings.html
-MENU_TL_SYSTEM_LOG	http://192.168.1.1/logintro.html
-MENU_TL_SNMP	http://192.168.1.1/snmpconfig.html
-MENU_TR69C	http://192.168.1.1/tr69cfg.html
-MENU_OMCI_CFG	http://192.168.1.1/omcicfg.cmd?action=view
-MENU_OMCI_GET_SET	http://192.168.1.1/omcicfg.cmd?action=view
-MENU_OMCI_CREATE	http://192.168.1.1/omcicreate.cmd?action=view
-MENU_OMCI_GET_NEXT	http://192.168.1.1/omcigetnext.cmd?action=view
-MENU_OMCI_MACRO	http://192.168.1.1/omcimacro.cmd?action=view
-MENU_OMCI_DOWNLOAD	http://192.168.1.1/omcidownload.html
-MENU_OMCI_SYSTEM	http://192.168.1.1/omcisystem.html
-MENU_SNTP	http://192.168.1.1/sntpcfg.html
-MENU_ACC_CNTR	http://192.168.1.1/password.html
-MENU_ACC_CNTR_PASSWORD	http://192.168.1.1/password.html
-MENU_ACC_CNTR_SRVCNTR	http://192.168.1.1/scsrvcntr.html
-MENU_TL_UPDATE_SOFTWARE	http://192.168.1.1/upload.html
-MENU_RESET_ROUTER	http://192.168.1.1/resetrouter.html
-MENU_ADVANCED_SETUP	http://192.168.1.1/wancfg.cmd
-MENU_WAN	http://192.168.1.1/wancfg.cmd
-MENU_WAN_3G_CFG	http://192.168.1.1/wan3gcfgview.html
-MENU_ADVANCED_SETUP	http://192.168.1.1/dslatm.cmd
-MENU_LAYER2_INTERFACE	http://192.168.1.1/dslatm.cmd
-MENU_DSL_ATM_INTERFACE	http://192.168.1.1/dslatm.cmd
-MENU_ADVANCED_SETUP	http://192.168.1.1/dslptm.cmd
-MENU_LAYER2_INTERFACE	http://192.168.1.1/dslptm.cmd
-MENU_DSL_PTM_INTERFACE	http://192.168.1.1/dslptm.cmd
-MENU_ADVANCED_SETUP	http://192.168.1.1/ethwan.html
-MENU_LAYER2_INTERFACE	http://192.168.1.1/ethwan.html
-MENU_ETH_INTERFACE	http://192.168.1.1/ethwan.html
-MENU_ADVANCED_SETUP	http://192.168.1.1/mocawan.cmd
-MENU_LAYER2_INTERFACE	http://192.168.1.1/mocawan.cmd
-MENU_MOCA_INTERFACE	http://192.168.1.1/mocawan.cmd
-MENU_ADVANCED_SETUP	http://192.168.1.1/wancfg.cmd
-MENU_WAN	http://192.168.1.1/wancfg.cmd
-MENU_WAN_3G_CFG	http://192.168.1.1/wan3gcfgview.html
-MENU_VPN	http://192.168.1.1/l2tpacwan.cmd
-MENU_VPN_L2TPAC	http://192.168.1.1/l2tpacwan.cmd
-MENU_LAN	http://192.168.1.1/lancfg2.html
-MENU_LANCFG	http://192.168.1.1/lancfg2.html
-MENU_LAN6	http://192.168.1.1/ipv6lancfg.html
-MENU_LAN	http://192.168.1.1/lancfg2.html
-MENU_MOCA_CONFIGURATION	http://192.168.1.1/mocacfg.html
-MENU_QOS	http://192.168.1.1/qosqmgmt.html
-MENU_QOS_QUEUE	http://192.168.1.1/qosqueue.cmd?action=view
-MENU_QOS_CLASS	http://192.168.1.1/qoscls.cmd?action=view
-MENU_ROUTING	http://192.168.1.1/rtdefaultcfg.html
-MENU_RT_DEFAULT_ROUTE	http://192.168.1.1/rtdefaultcfg.html
-MENU_RT_STATIC_ROUTE	http://192.168.1.1/rtroutecfg.cmd?action=viewcfg
-MENU_RT_RIP	http://192.168.1.1/ripcfg.cmd?action=view
-MENU_DNS	http://192.168.1.1/dnscfg.html
-MENU_DNS_SETUP	http://192.168.1.1/dnscfg.html
-MENU_DDNS	http://192.168.1.1/ddnsmngr.cmd
-MENU_DSL	http://192.168.1.1/adslcfgc.html
-MENU_DSL	http://192.168.1.1/adslcfg.html
-MENU_DSL	http://192.168.1.1/xdslcfg.html
-MENU_DSL_BONDING	http://192.168.1.1/dslbondingcfg.html
-MENU_IPP	http://192.168.1.1/ippcfg.html
-MENU_UPNP	http://192.168.1.1/upnpcfg.html
-MENU_DNSPROXY	http://192.168.1.1/dnsproxycfg.html
-MENU_STANDBY	http://192.168.1.1/standby.html
-MENU_PPTPCLIENT	http://192.168.1.1/pptpclient.html
-MENU_PACKET_ACCELERATION	http://192.168.1.1/packetacceleration.html
-MENU_WIRELESS_SETTINGS	http://192.168.1.1/wlItemsCgiCmd[0]
-MENU_WIRELESS_SETTINGS	http://192.168.1.1/wlItemsCgiCmd[0]
-MENU_WL_BASIC	http://192.168.1.1/wlcfg.html
-MENU_WL_SECURITY	http://192.168.1.1/wlsecurity.html
-MENU_WL_MAC_FILTERING	http://192.168.1.1/wlmacflt.cmd?action=view
-MENU_WL_WDS	http://192.168.1.1/wlwds.cmd?action=view
-MENU_WL_ADVANCED	http://192.168.1.1/wlcfgadv.html
-MENU_WL_SES	http://192.168.1.1/wlses.html
-MENU_WL_STATION_LIST	http://192.168.1.1/wlstationlist.cmd
-MENU_WL_WAPI_AS	http://192.168.1.1/wlwapias.html
-MENU_WL_WAPI_AS	http://192.168.1.1/wlwapias.html
-MENU_STORAGESERVICE	http://192.168.1.1/storageservicecfg.cmd?view
-MENU_STORAGE_INFO	http://192.168.1.1/storageservicecfg.cmd?view
-MENU_STORAGE_USERACCOUNT	http://192.168.1.1/storageuseraccountcfg.cmd?view
-MENU_VOICE_SETTINGS	http://192.168.1.1/voicemgcp_basic.html
-MENU_VOICE_MGCP	http://192.168.1.1/voicemgcp_basic.html
-MENU_VOICE_STATS	http://192.168.1.1/voicestats45.html
-MENU_VOICE_SETTINGS	http://192.168.1.1/voiceh248_status.html
-MENU_VOICE_H248_STATUS	http://192.168.1.1/voiceh248_status.html
-MENU_VOICE_H248_BASIC	http://192.168.1.1/voiceh248_basic.html
-MENU_VOICE_H248_ADVANCED	http://192.168.1.1/voiceh248_advanced.html
-MENU_VOICE_SETTINGS	http://192.168.1.1/voicesip_basic.html
-MENU_VOICE_SETTINGS	http://192.168.1.1/voicesip_status.html
-MENU_VOICE_SIP_STATUS	http://192.168.1.1/voicesip_status.html
-MENU_VOICE_SIP_BASIC	http://192.168.1.1/voicesip_basic.html
-MENU_VOICE_SIP_ADVANCED	http://192.168.1.1/voicesip_advanced.html
-MENU_VOICE_SIP_EXTRA	http://192.168.1.1/voicesip_extra.html
-MENU_VOICE_SIP_DEBUG	http://192.168.1.1/voicesip_debug.html
-MENU_IP_TUNNEL	http://192.168.1.1/tunnelcfg.cmd?action=viewcfg
-MENU_6IN4_TUNNEL	http://192.168.1.1/tunnelcfg.cmd?action=viewcfg
-MENU_4IN6_TUNNEL	http://192.168.1.1/tunnelcfg.cmd?action=view
-MENU_PWRMNGT	http://192.168.1.1/pwrmngt.html
-MENU_MULTICAST	http://192.168.1.1/multicast.html
-MENU_DIAGNOSTICS	http://192.168.1.1/diag.html
-MENU_MANAGEMENT	http://192.168.1.1/backupsettings.html
-MENU_TL_SETTINGS	http://192.168.1.1/backupsettings.html
-MENU_TL_SETTINGS_BACKUP	http://192.168.1.1/backupsettings.html
-MENU_TL_SETTINGS_UPDATE	http://192.168.1.1/updatesettings.html
-MENU_TL_SETTINGS_DEFAULT	http://192.168.1.1/defaultsettings.html
-MENU_TL_SYSTEM_LOG	http://192.168.1.1/logintro.html
-MENU_TL_SECURITY_LOG	http://192.168.1.1/seclogintro.html
-MENU_TL_SNMP	http://192.168.1.1/snmpconfig.html
-MENU_TR69C	http://192.168.1.1/tr69cfg.html
-MENU_OMCI_CFG	http://192.168.1.1/omcicfg.cmd?action=view
-MENU_OMCI_GET_SET	http://192.168.1.1/omcicfg.cmd?action=view
-MENU_OMCI_CREATE	http://192.168.1.1/omcicreate.cmd?action=view
-MENU_OMCI_GET_NEXT	http://192.168.1.1/omcigetnext.cmd?action=view
-MENU_OMCI_MACRO	http://192.168.1.1/omcimacro.cmd?action=view
-MENU_OMCI_DOWNLOAD	http://192.168.1.1/omcidownload.html
-MENU_OMCI_SYSTEM	http://192.168.1.1/omcisystem.html
-MENU_SNTP	http://192.168.1.1/sntpcfg.html
-MENU_TL_UPDATE_SOFTWARE	http://192.168.1.1/upload.html
-MENU_RESET_ROUTER	http://192.168.1.1/resetrouter.html
-MENU_DIAGNOSTICS	http://192.168.1.1/diag.html
-MENU_MANAGEMENT	http://192.168.1.1/logintro.html
-MENU_TL_SYSTEM_LOG	http://192.168.1.1/logintro.html
-MENU_TL_SNMP	http://192.168.1.1/snmpconfig.html
-MENU_TR69C	http://192.168.1.1/tr69cfg.html
-MENU_OMCI_CFG	http://192.168.1.1/omcicfg.cmd?action=view
-MENU_OMCI_GET_SET	http://192.168.1.1/omcicfg.cmd?action=view
-MENU_OMCI_CREATE	http://192.168.1.1/omcicreate.cmd?action=view
-MENU_OMCI_GET_NEXT	http://192.168.1.1/omcigetnext.cmd?action=view
-MENU_OMCI_MACRO	http://192.168.1.1/omcimacro.cmd?action=view
-MENU_OMCI_DOWNLOAD	http://192.168.1.1/omcidownload.html
-MENU_OMCI_SYSTEM	http://192.168.1.1/omcisystem.html
-MENU_TL_UPDATE_SOFTWARE	http://192.168.1.1/upload.html
-MENU_DEVICE_INFO	http://192.168.1.1/info.html
-MENU_DEVICE_SUMMARY	http://192.168.1.1/info.html
-MENU_DEVICE_WAN	http://192.168.1.1/wancfg.cmd?action=view
-MENU_STATISTICS	http://192.168.1.1/statsifc.html
-MENU_ST_LAN	http://192.168.1.1/statsifc.html
-MENU_ST_MOCA	http://192.168.1.1/statsmoca.cmd?choice=LAN
-MENU_WAN	http://192.168.1.1/statswan.cmd
-MENU_ST_ATM	http://192.168.1.1/statsxtm.cmd
-MENU_ST_ADSL	http://192.168.1.1/statsadsl.html
-MENU_ST_VDSL	http://192.168.1.1/statsvdsl.html
-MENU_DEVICE_ROUTE	http://192.168.1.1/rtroutecfg.cmd?action=view
-MENU_RT_ARP	http://192.168.1.1/arpview.cmd
-MENU_DHCPINFO	http://192.168.1.1/dhcpinfo.html
+
+MENU_TL_SYSTEM_LOG		http://192.168.1.1/logintro.html
+
+MENU_TL_SECURITY_LOG		http://192.168.1.1/seclogintro.html
+
+MENU_TL_SNMP			http://192.168.1.1/snmpconfig.html
+
+MENU_TR69C			http://192.168.1.1/tr69cfg.html
+
+MENU_OMCI_CFG			http://192.168.1.1/omcicfg.cmd?action=view
+
+MENU_OMCI_GET_SET		http://192.168.1.1/omcicfg.cmd?action=view
+
+MENU_OMCI_CREATE		http://192.168.1.1/omcicreate.cmd?action=view
+
+MENU_OMCI_GET_NEXT		http://192.168.1.1/omcigetnext.cmd?action=view
+
+MENU_OMCI_MACRO			http://192.168.1.1/omcimacro.cmd?action=view
+
+MENU_OMCI_DOWNLOAD		http://192.168.1.1/omcidownload.html
+
+MENU_OMCI_SYSTEM		http://192.168.1.1/omcisystem.html
+
+MENU_SNTP			http://192.168.1.1/sntpcfg.html
+
+MENU_TL_UPDATE_SOFTWARE		http://192.168.1.1/upload.html
+
+MENU_RESET_ROUTER		http://192.168.1.1/resetrouter.html
+
+MENU_DIAGNOSTICS		http://192.168.1.1/diag.html
+
+MENU_MANAGEMENT			http://192.168.1.1/logintro.html
+
+MENU_TL_SYSTEM_LOG		http://192.168.1.1/logintro.html
+
+MENU_TL_SNMP			http://192.168.1.1/snmpconfig.html
+
+MENU_TR69C			http://192.168.1.1/tr69cfg.html
+
+MENU_OMCI_CFG			http://192.168.1.1/omcicfg.cmd?action=view
+
+MENU_OMCI_GET_SET		http://192.168.1.1/omcicfg.cmd?action=view
+
+MENU_OMCI_CREATE		http://192.168.1.1/omcicreate.cmd?action=view
+
+MENU_OMCI_GET_NEXT		http://192.168.1.1/omcigetnext.cmd?action=view
+
+MENU_OMCI_MACRO			http://192.168.1.1/omcimacro.cmd?action=view
+
+MENU_OMCI_DOWNLOAD		http://192.168.1.1/omcidownload.html
+
+MENU_OMCI_SYSTEM		http://192.168.1.1/omcisystem.html
+
+MENU_TL_UPDATE_SOFTWARE		http://192.168.1.1/upload.html
+
+MENU_DEVICE_INFO		http://192.168.1.1/info.html
+
+MENU_DEVICE_SUMMARY		http://192.168.1.1/info.html
+
+MENU_DEVICE_WAN			http://192.168.1.1/wancfg.cmd?action=view
+
+MENU_STATISTICS			http://192.168.1.1/statsifc.html
+
+MENU_ST_LAN			http://192.168.1.1/statsifc.html
+
+MENU_ST_MOCA			http://192.168.1.1/statsmoca.cmd?choice=LAN
+
+MENU_WAN			http://192.168.1.1/statswan.cmd
+
+MENU_ST_ATM			http://192.168.1.1/statsxtm.cmd
+
+MENU_ST_ADSL			http://192.168.1.1/statsadsl.html
+
+MENU_ST_VDSL			http://192.168.1.1/statsvdsl.html
+
+MENU_DEVICE_ROUTE		http://192.168.1.1/rtroutecfg.cmd?action=view
+
+MENU_RT_ARP			http://192.168.1.1/arpview.cmd
+
+MENU_DHCPINFO			http://192.168.1.1/dhcpinfo.html
+
