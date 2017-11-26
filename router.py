@@ -1,7 +1,7 @@
 '''
-A PTCL router class, which allows to interact with the router.
+A PTCL router class, which allows basic functionality for PTCL router.
 
-Example:
+Usage Example:
 # router is used an instance of Router class in all examples.
 >>> from router import Router
 >>> router = Router('192.168.1.1')      # Connects session for interacting with router
@@ -20,7 +20,7 @@ import re
 import sys
 
 
-class Router(object):
+class Router():
     '''
     A PTCL router class.
 
@@ -29,16 +29,15 @@ class Router(object):
             gateway, username, password
     All the arguments are strings.
     '''
-    mac_pattern = re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
+    mac_pattern = re.compile(u'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
 
 
-    def __init__(self, mask="192.168.10.1", username="admin", password="admin"):
-        self.mask = "http://" + mask + '/'
+    def __init__(self, gateway="192.168.10.1", username="admin", password="admin"):
+        self.gateway = "http://" + gateway + '/'
         self.username = username
         self.password = password
         self.dev_info = {}      # Devices info
         self.active_dev = []    # Active Devices on Wi-Fi
-        self.host_and_mac = []  # Mac Addresses and Hostnames
         self.session = requests.Session()
         self.session.auth = (self.username, self.password)
         self.sessionKey = ""
@@ -71,8 +70,8 @@ class Router(object):
         Gets session key from the html page for interacting with forms which
         require session key for authentication.
         '''
-        r = self.scrape_page(url=self.mask + "wlmacflt.cmd")
-        self.sessionKey = re.search(r'\d{3,30}', r.content.decode()).group()
+        r = self.scrape_page(url=self.gateway + "wlmacflt.cmd")
+        self.sessionKey = re.search('\d{3,30}', r.content.decode()).group()
         return self.sessionKey
 
 
@@ -83,14 +82,13 @@ class Router(object):
             HOSTNAME | MAC | LOCAL IP | EXPIRES IN
 
         Example:
-        >>> my-pc | xx:xx..| 192.168..| 19 Hours ...
+        >>>  my-pc | xx:xx..| 192.168..| 19 Hours ...
 
         Return:
             self.dev_info (Dictionary object)
         '''
-        soup = self.scrape_page(url=self.mask + "dhcpinfo.html", create_soup='y')
-        td = soup.findAll('td')
-        for i in td:
+        soup = self.scrape_page(url=self.gateway + "dhcpinfo.html", soup='y')
+        for i in soup.findAll('td'):
             if self.mac_pattern.search(i.text):
                 '''
                 The HTML page contains hostnames and mac addresses right next
@@ -113,48 +111,15 @@ class Router(object):
         '''
         Gets information about the connected devices.
         '''
-        soup = self.scrape_page(url=self.mask + "wlstationlist.cmd", create_soup='y')
+        soup = self.scrape_page(url=self.gateway + "wlstationlist.cmd", soup='y')
         for i in soup.findAll('td'):
-            if self.mac_pattern.search(i.text.strip()):
-                self.active_dev.append(i.text.strip().lower().encode('ascii'))
+            searchstr = i.text.replace('&nbsp','').strip()
+            if self.mac_pattern.search(searchstr):
+                self.active_dev.append(searchstr.lower())
         return self.active_dev
 
-
-    def block(self, devmac):
-        '''
-        Block device using Mac Address.
-        - devmac: Device mac address to block.
-
-        Example:
-        >>> router.block('xx:xx:xx:xx:xx:xx')
-        '''
-        self.session.get(self.mask + "wlmacflt.cmd?action=add&rmLst=%s&sessionKey=%s" % (devmac, self.session_key()))
-
-
-    def unblock(self, udevmac):
-        '''
-        Unblock device using Mac Address.
-        - udevmac: Device mac address to unblock.
-
-        Example:
-        >>> router.unblock('xx:xx:xx:xx:xx:xx')
-        '''
-        self.session.get(self.mask + "wlmacflt.cmd?action=remove&rmLst=%s&sessionKey=%s" % (udevmac, self.session_key()))
-
-
-    def reboot(self):
-        '''
-        Reboots Router.
-        '''
-
-        r = self.session.get(self.mask + "rebootinfo.cgi?sessionKey=%s" % self.session_key())
-        if r.status_code == 200:
-            print("Router has been succesfully rebooted.")
-        else:
-            print("Request not successful.")
-
-
-    def time_limit(self, username="User_1", mac="", days="", start="1", end="24"):
+    #TODO if already username defined, raise Error
+    def time_limit(self, username="User_1", mac="", days="Everyday", start="1", end="24"):
         '''
         Restricts user from using internet for limited time.
         Creates a user profile containing mac, days, start_time, end_time.
@@ -187,20 +152,7 @@ class Router(object):
         "Sat": 32,
         "Sun": 64,
         "Everyday": 127}
-        num_lst = []
 
-        def bin_to_dec(integer):
-            # TODO: Add check for integer parameter.
-            '''
-            Takes an integer and divides it by 2, appends to the num_lst
-            and returns sum of the num_lst when it reaches 1.
-            '''
-            # if not isinstance(integer, int):
-            #     raise Exception
-            if 1 in num_lst:
-                return sum(num_lst)
-            num_lst.append(integer / 2)
-            return bin_to_dec(integer / 2)
 
         def convert_time(start_time="1", end_time="23:59"):
             # TODO : Add test that the numbers after : shouldn't exceed 60 (minutes)
@@ -245,16 +197,16 @@ class Router(object):
         for keys, val in week_days.items():
             if days and len(days) < 3:
                 if len(days) == 1:
-                    self.session.get(self.mask + 'todmngr.tod?action=add&mac=%s'.format(mac), params=gen_params(days=week_days[days]))
+                    self.session.get(self.gateway + 'todmngr.tod?action=add&mac={}'.format(mac), params=gen_params(days=week_days[days]))
                     break
 
                 elif len(days) == 2 and days[0] in week_days and days[1] in week_days:
                     if days[0] == days[1]:
-                        self.session.get(self.mask + 'todmngr.tod?action=add&mac=%s'.format(mac), params=gen_params(days=week_days["Everyday"]))
+                        self.session.get(self.gateway + 'todmngr.tod?action=add&mac={}'.format(mac), params=gen_params(days=week_days["Everyday"]))
                         break
 
                     elif days[0] != days[1]:
-                        self.session.get(self.mask + 'todmngr.tod?action=add&mac=%s'.format(mac), params=gen_params(days=str(week_days[days[1]])))
+                        self.session.get(self.gateway + 'todmngr.tod?action=add&mac={}'.format(mac), params=gen_params(days=str(week_days[days[1]])))
                         break
                         # Mon - Sunday, select the value from sunday and add it to the value preceding it.
                 else:
@@ -268,8 +220,34 @@ class Router(object):
         pass
 
 
-    def passwd(self):
+    def block(self, devmac):
         '''
-        Change the password of the router.
+        Block device using Mac Address.
+        - devmac: Device mac address to block.
+
+        Example:
+        >>> router.block('xx:xx:xx:xx:xx:xx')
         '''
-        pass
+        self.session.get(self.gateway + "wlmacflt.cmd?action=add&rmLst={}&sessionKey={}".format(devmac, self.session_key()))
+
+
+    def unblock(self, udevmac):
+        '''
+        Unblock device using Mac Address.
+        - udevmac: Device mac address to unblock.
+
+        Example:
+        >>> router.unblock('xx:xx:xx:xx:xx:xx')
+        '''
+        self.session.get(self.gateway + "wlmacflt.cmd?action=remove&rmLst={}&sessionKey={}".format(udevmac, self.session_key()))
+
+
+    def reboot(self):
+        '''
+        Reboots Router.
+        '''
+        r = self.session.get(self.gateway + "rebootinfo.cgi?sessionKey={}".format(self.session_key()))
+        if r.status_code == 200:
+            print("Router has been succesfully rebooted.")
+        else:
+            print("Request not successful.")
