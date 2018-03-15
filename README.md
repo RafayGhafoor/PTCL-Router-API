@@ -6,6 +6,17 @@ A PTCL-Router API to interact with default router interface.
 
 [![asciicast](https://asciinema.org/a/KiWYs8wuLPBPSKKPCaetDLxbP.png)](https://asciinema.org/a/KiWYs8wuLPBPSKKPCaetDLxbP)
 
+# Installation:
+
+```git clone https://github.com/RafayGhafoor/PTCL-Router-API
+cd PTCL-Router-API
+pip install -r requirements.txt
+```
+
+# Note:
+
+The API is being re-written from scratch in the testing branch, the existing code is not perfect by any means and was written for temporary workaround.
+
 # Usage:
 
 ```
@@ -75,7 +86,8 @@ Options:
 - Added two modes for blocking users ( CLI-MODE and SILENT-MODE (Default) ).
 
 # TODO:
-
+- [ ] Telegram bot for controlling router.
+- [ ] Flask Restful API.
 - [X] Writing documentation for API usage.
 - [ ] Port-Forwarding from command line.
 - [ ] Parsing router logs.
