@@ -16,15 +16,15 @@ def write_config():
 
   config = configobj.ConfigObj()
   DEFAULT = {'mask': '192.168.1.1', 'username': 'admin', 'password': 'admin'}
-  mask = raw_input("Leave empty for default configuration.\nPlease enter router gateway\t(Default 192.168.1.1)\t: ")
+  mask = input("Leave empty for default configuration.\nPlease enter router gateway\t(Default 192.168.1.1)\t: ")
 
   if mask:
       DEFAULT['mask'] = mask
-  username = raw_input("Please enter router username\t(Default admin)\t: ")
+  username = input("Please enter router username\t(Default admin)\t: ")
 
   if username:
       DEFAULT['username'] = username
-  password = raw_input("Please enter router password\t(Default admin)\t: ")
+  password = input("Please enter router password\t(Default admin)\t: ")
 
   if password:
       DEFAULT['password'] = password
@@ -33,7 +33,7 @@ def write_config():
 
   with open('config.ini', 'w') as configfile:
       config.write(configfile)
-  print '\nConfiguration file Generated.'
+  print('\nConfiguration file Generated.')
 
 
 def set_alias():
@@ -41,10 +41,10 @@ def set_alias():
     config = configobj.ConfigObj('config.ini')
 
     while True:
-        hostname = raw_input("Set Alias for hosname: ")
+        hostname = input("Set Alias for hosname: ")
         if hostname == 'q':
             break
-        macaddress= raw_input("Enter it\'s macaddress: ")
+        macaddress= input("Enter it\'s macaddress: ")
 
         if macaddress == 'q':
             break
@@ -55,7 +55,7 @@ def set_alias():
                 with open('config.ini', 'r+') as configfile:
                     config.write(configfile)
     else:
-        print "Already Present."
+        print("Already Present.")
 
 
 def get_alias():

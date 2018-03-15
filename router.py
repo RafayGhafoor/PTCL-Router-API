@@ -74,8 +74,8 @@ class Router(object):
                 index less than the current index of mac address, we obtain the
                 hostname and append it to the dev_hostname list.
                 '''
-                self.dev_hostname.append(td[td.index(i) - 1].text.encode('ascii'))
-                self.mac_address.append(i.text.encode('ascii'))
+                self.dev_hostname.append(td[td.index(i) - 1].text)
+                self.mac_address.append(i.text)
         return (self.dev_hostname, self.mac_address)
 
 
@@ -86,7 +86,7 @@ class Router(object):
         r, soup = self.scrape_page(self.mask + "wlstationlist.cmd")
         for i in soup.findAll('td'):
             if self.mac_adr_regex.search(i.text.strip()):
-                self.active_dev.append(i.text.strip().lower().encode('ascii'))
+                self.active_dev.append(i.text.strip().lower())
         return self.active_dev
 
 
@@ -109,7 +109,7 @@ class Router(object):
         Reboots Router.
         '''
         r, soup = self.scrape_page(self.mask + "rebootinfo.cgi?sessionKey=%s" % self.session_key())
-        print "Router has been succesfully rebooted."
+        print("Router has been succesfully rebooted.")
 
 
     def time_restriction(self):
