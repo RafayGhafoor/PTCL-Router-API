@@ -8,7 +8,8 @@ A PTCL-Router API to interact with default router interface.
 
 # Installation:
 
-```git clone https://github.com/RafayGhafoor/PTCL-Router-API
+```
+git clone https://github.com/RafayGhafoor/PTCL-Router-API
 cd PTCL-Router-API
 pip install -r requirements.txt
 ```
