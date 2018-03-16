@@ -1,10 +1,10 @@
 '''
-A PTCL router class, which allows basic functionality for PTCL router.
+A PTCL router class which allows basic functionality for PTCL router.
 
 Usage Example:
-# router is used an instance of Router class in all examples.
+# router is used as an instance for the Router class in all examples.
 >>> from router import Router
->>> router = Router('192.168.1.1')      # Connects session for interacting with router
+>>> router = Router(gateway='192.168.1.1')      # Launches session for interacting with router
 >>>
 >>> router.reboot() # Reboots router
 >>> router.stationinfo() # Returns a list of active devices
@@ -40,7 +40,7 @@ class Router():
         self.active_dev = []    # Active Devices on Wi-Fi
         self.session = requests.Session()
         self.session.auth = (self.username, self.password)
-        self.sessionKey = ""
+        self.sessionKey = None
 
 
     def scrape_page(self, url='', params='', soup='n'):
@@ -51,6 +51,7 @@ class Router():
         '''
         if not url:
             return
+
         try:
             request_url = self.session.get(url, params=params)
             if request_url.status_code == 401:
@@ -60,6 +61,7 @@ class Router():
                     html_soup = bs4.BeautifulSoup(request_url.content, 'lxml')
                     return html_soup
                 return request_url
+
         except requests.exceptions.ConnectionError:
             print("Internet Connection Down.\nExiting...")
             sys.exit()
@@ -87,24 +89,26 @@ class Router():
         Return:
             self.dev_info (Dictionary object)
         '''
-        soup = self.scrape_page(url=self.gateway + "dhcpinfo.html", soup='y')
+        soup = self.scrape_page(url=(self.gateway + "dhcpinfo.html"), soup='y')
         td = soup.findAll('td')
         for i in td:
-            if self.mac_pattern.search(i.text):
-                '''
-                The HTML page contains hostnames and mac addresses right next
-                to each other in the form of table. We search in the tables list
-                (td) until a mac address is found, then appends it to the
-                mac_address list. The hostname is located before it so by using
-                index less than the current index of mac address, we obtain the
-                hostname and append it to the dev_hostname list.
-                '''
-                # Before mac_addresses, there is hostname
-                # After mac_addresses, there are local ip and expire time for
-                # the device connected
-                hostname = td[td.index(i) - 1].text
-                self.dev_info["Hostname"] = hostname
-                self.dev_info[hostname] = [i.text, td[td.index(i) + 1].text, td[td.index(i) + 2].text]
+            if not self.mac_pattern.search(i.text):
+                return
+            '''
+            The HTML page contains hostnames and mac addresses right next
+            to each other in the form of table. We search in the tables list
+            (td) until a mac address is found, then appends it to the
+            mac_address list. The hostname is located before it so by using
+            index less than the current index of mac address, we obtain the
+            hostname and append it to the dev_hostname list.
+            '''
+            # Before mac_addresses, there is hostname
+            # After mac_addresses, there are local ip and expire time for
+            # the devices connected
+            hostname = td[td.index(i) - 1].text
+            self.dev_info["Hostname"] = hostname
+            self.dev_info[hostname] = [i.text, td[td.index(i) + 1].text, td[td.index(i) + 2].text]
+
         return self.dev_info
 
 
