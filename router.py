@@ -88,7 +88,8 @@ class Router():
             self.dev_info (Dictionary object)
         '''
         soup = self.scrape_page(url=self.gateway + "dhcpinfo.html", soup='y')
-        for i in soup.findAll('td'):
+        td = soup.findAll('td')
+        for i in td:
             if self.mac_pattern.search(i.text):
                 '''
                 The HTML page contains hostnames and mac addresses right next
