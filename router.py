@@ -43,7 +43,7 @@ class Router(object):
             if request_url.status_code == 401:
                 sys.exit("Username or Password is incorrect.")
             html_soup = bs4.BeautifulSoup(request_url.content, 'html.parser')
-            return request_url, html_soup
+            return (request_url, html_soup)
         except requests.exceptions.ConnectionError:
             print("Internet Connection Down.\nExiting...")
             sys.exit()
@@ -54,7 +54,7 @@ class Router(object):
         Gets session key from the html page.
         '''
         r, soup = self.scrape_page(self.mask + "wlmacflt.cmd")
-        self.sessionKey = re.search(r'\d{3,30}', r.content).group().encode('ascii')
+        self.sessionKey = re.search(r'\d{3,30}', r.content.decode('utf-8')).group()
         return self.sessionKey
 
 
