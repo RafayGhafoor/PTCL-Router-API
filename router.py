@@ -7,6 +7,7 @@ Usage Example:
 >>> router = Router(gateway='192.168.1.1')      # Launches session for interacting with router
 >>>
 >>> router.reboot() # Reboots router
+
 >>> router.stationinfo() # Returns a list of active devices
 ['macxxx', 'macxxx2', 'macxx3']
 
@@ -14,10 +15,12 @@ Usage Example:
 {'HOSTNAME': ['Mac', 'LocalIp', 'Expires']}
 {'my-computer': ['macxx', '192.168.10.1', '23 Hours, 59 Minutes']}
 '''
-import requests
-import bs4
+
 import re
 import sys
+
+import requests
+import bs4
 
 
 class Router():
@@ -43,19 +46,18 @@ class Router():
         self.sessionKey = None
 
 
-    def scrape_page(self, url='', params='', soup='n'):
+    def scrape_page(self, url, params='', soup='n'):
         '''
         Scrape given link and create a beautiful soup object.
         - url:  Url to scrape.
         - soup: "n" to not create soup object and only return request response.
         '''
-        if not url:
-            return
-
         try:
             request_url = self.session.get(url, params=params)
+
             if request_url.status_code == 401:
                 sys.exit("Username or Password is incorrect.")
+
             elif request_url.status_code == 200:
                 if soup == 'y':
                     html_soup = bs4.BeautifulSoup(request_url.content, 'lxml')
@@ -67,13 +69,16 @@ class Router():
             sys.exit()
 
 
-    def session_key(self):
+    def get_session_key(self):
         '''
         Gets session key from the html page for interacting with forms which
         require session key for authentication.
         '''
-        r = self.scrape_page(url=self.gateway + "wlmacflt.cmd")
-        self.sessionKey = re.search('\d{3,30}', r.content.decode()).group()
+        r = self.scrape_page(url=(self.gateway + "wlmacflt.cmd"))
+
+        if not self.sessionKey:
+            self.sessionKey = re.search('\d{3,30}', r.content.decode()).group()
+
         return self.sessionKey
 
 
@@ -91,23 +96,24 @@ class Router():
         '''
         soup = self.scrape_page(url=(self.gateway + "dhcpinfo.html"), soup='y')
         td = soup.findAll('td')
+
         for i in td:
-            if not self.mac_pattern.search(i.text):
-                return
-            '''
-            The HTML page contains hostnames and mac addresses right next
-            to each other in the form of table. We search in the tables list
-            (td) until a mac address is found, then appends it to the
-            mac_address list. The hostname is located before it so by using
-            index less than the current index of mac address, we obtain the
-            hostname and append it to the dev_hostname list.
-            '''
-            # Before mac_addresses, there is hostname
-            # After mac_addresses, there are local ip and expire time for
-            # the devices connected
-            hostname = td[td.index(i) - 1].text
-            self.dev_info["Hostname"] = hostname
-            self.dev_info[hostname] = [i.text, td[td.index(i) + 1].text, td[td.index(i) + 2].text]
+
+            if self.mac_pattern.search(i.text):
+                '''
+                The HTML page contains hostnames and mac addresses right next
+                to each other in the form of table. We search in the tables list
+                (td) until a mac address is found, then appends it to the
+                mac_address list. The hostname is located before it so by using
+                index less than the current index of mac address, we obtain the
+                hostname and append it to the dev_hostname list.
+                '''
+                # Before mac_addresses, there is hostname
+                # After mac_addresses, there are local ip and expire time for
+                # the devices connected
+                hostname = td[td.index(i) - 1].text
+                self.dev_info["Hostname"] = hostname
+                self.dev_info[hostname] = [i.text, td[td.index(i) + 1].text, td[td.index(i) + 2].text]
 
         return self.dev_info
 
@@ -117,10 +123,13 @@ class Router():
         Gets information about the connected devices.
         '''
         soup = self.scrape_page(url=self.gateway + "wlstationlist.cmd", soup='y')
+
         for i in soup.findAll('td'):
             searchstr = i.text.replace('&nbsp','').strip()
+
             if self.mac_pattern.search(searchstr):
                 self.active_dev.append(searchstr.lower())
+
         return self.active_dev
 
     #TODO if already username defined, raise Error
@@ -193,7 +202,7 @@ class Router():
         gen_params = lambda days: {
         'username': username,
         'days': days, 'start_time': start,
-        'end_time': end, 'sessionKey': self.session_key()
+        'end_time': end, 'sessionKey': self.get_session_key()
         }
 
         start, end = convert_time(start_time=start, end_time=end)
@@ -218,41 +227,47 @@ class Router():
                     print("Specified day is not in week_days.")
 
 
-    def url_filter(self):
+    def web_filter(self, url):
         '''
         Block website temporarily/permanently (i.e Temporarily, when time is specified).
         '''
         pass
 
 
-    def block(self, devmac):
+    def block(self, mac):
         '''
         Block device using Mac Address.
-        - devmac: Device mac address to block.
+        - mac: Device mac address to block.
 
         Example:
         >>> router.block('xx:xx:xx:xx:xx:xx')
         '''
-        self.session.get(self.gateway + "wlmacflt.cmd?action=add&rmLst={}&sessionKey={}".format(devmac, self.session_key()))
+        self.session.get(self.gateway + "wlmacflt.cmd?action=add&rmLst={}&sessionKey={}".format(devmac, self.get_session_key()))
 
 
-    def unblock(self, udevmac):
+    def unblock(self, mac):
         '''
         Unblock device using Mac Address.
-        - udevmac: Device mac address to unblock.
+        - mac: Device mac address to unblock.
 
         Example:
         >>> router.unblock('xx:xx:xx:xx:xx:xx')
         '''
-        self.session.get(self.gateway + "wlmacflt.cmd?action=remove&rmLst={}&sessionKey={}".format(udevmac, self.session_key()))
+        self.session.get(self.gateway + "wlmacflt.cmd?action=remove&rmLst={}&sessionKey={}".format(udevmac, self.get_session_key()))
 
 
     def reboot(self):
         '''
         Reboots Router.
         '''
-        r = self.session.get(self.gateway + "rebootinfo.cgi?sessionKey={}".format(self.session_key()))
-        if r.status_code == 200:
-            print("Router has been succesfully rebooted.")
-        else:
-            print("Request not successful.")
+        self.session.get(self.gateway + "rebootinfo.cgi?sessionKey={}".format(self.get_session_key()))
+
+
+if __name__ == '__main__':
+    papi = Router()
+
+    print(papi.get_session_key())
+
+    print(papi.stationinfo())
+
+    print(papi.dhcpinfo())
