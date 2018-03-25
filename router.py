@@ -15,7 +15,6 @@ Usage Example:
 {'HOSTNAME': ['Mac', 'LocalIp', 'Expires']}
 {'my-computer': ['macxx', '192.168.10.1', '23 Hours, 59 Minutes']}
 '''
-
 import re
 import sys
 
@@ -35,7 +34,7 @@ class Router():
     mac_pattern = re.compile(u'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
 
 
-    def __init__(self, gateway="192.168.10.1", username="admin", password="admin"):
+    def __init__(self, gateway="192.168.1.1", username="admin", password="ptcl"):
         self.gateway = "http://" + gateway + '/'
         self.username = username
         self.password = password
@@ -74,10 +73,10 @@ class Router():
         Gets session key from the html page for interacting with forms which
         require session key for authentication.
         '''
-        r = self.scrape_page(url=(self.gateway + "wlmacflt.cmd"))
+        r = self.scrape_page(url=self.gateway + 'wlmacflt.cmd')
 
         if not self.sessionKey:
-            self.sessionKey = re.search('\d{3,30}', r.content.decode()).group()
+            self.sessionKey = re.search('\d{5,13}', r.content.decode()).group()
 
         return self.sessionKey
 
@@ -112,7 +111,6 @@ class Router():
                 # After mac_addresses, there are local ip and expire time for
                 # the devices connected
                 hostname = td[td.index(i) - 1].text
-                self.dev_info["Hostname"] = hostname
                 self.dev_info[hostname] = [i.text, td[td.index(i) + 1].text, td[td.index(i) + 2].text]
 
         return self.dev_info
@@ -261,13 +259,3 @@ class Router():
         Reboots Router.
         '''
         self.session.get(self.gateway + "rebootinfo.cgi?sessionKey={}".format(self.get_session_key()))
-
-
-if __name__ == '__main__':
-    papi = Router()
-
-    print(papi.get_session_key())
-
-    print(papi.stationinfo())
-
-    print(papi.dhcpinfo())
