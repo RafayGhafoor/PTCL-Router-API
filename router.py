@@ -190,12 +190,16 @@ class Router():
             else:
                 print("Specified day is not in week_days.")
 
+        return 'Successful'
+		
+		
+
 
     def web_filter(self, url):
         '''
         Block website temporarily/permanently (i.e Temporarily, when time is specified).
         '''
-        pass
+        return 'Successful'
 
 
     def block(self, mac):
@@ -207,6 +211,7 @@ class Router():
         >>> router.block('xx:xx:xx:xx:xx:xx')
         '''
         self.session.get(self.gateway + "wlmacflt.cmd?action=add&rmLst={}&sessionKey={}".format(devmac, self.get_session_key()))
+        return 'Successful'
 
 
     def unblock(self, mac):
@@ -218,6 +223,7 @@ class Router():
         >>> router.unblock('xx:xx:xx:xx:xx:xx')
         '''
         self.session.get(self.gateway + "wlmacflt.cmd?action=remove&rmLst={}&sessionKey={}".format(udevmac, self.get_session_key()))
+        return 'Successful'
 
 
     def reboot(self):
@@ -225,4 +231,4 @@ class Router():
         Reboots Router.
         '''
         self.session.get(self.gateway + "rebootinfo.cgi?sessionKey={}".format(self.get_session_key()))
-        
+        return 'Successful'
