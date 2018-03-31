@@ -21,6 +21,7 @@ import sys
 import requests
 import bs4
 
+from utils import convert_time
 
 class Router():
     '''
@@ -131,7 +132,7 @@ class Router():
         return self.active_dev
 
     #TODO if already username defined, raise Error
-    def time_limit(self, username="User_1", mac="", days="Everyday", start="1", end="24"):
+    def set_time_limit(self, username="User_1", mac="", days="Everyday", start="1", end="24"):
         '''
         Restricts user from using internet for limited time.
         Creates a user profile containing mac, days, start_time, end_time.
@@ -145,16 +146,17 @@ class Router():
         Example:
         Creates a profile named as User-1 and sets time limit for mac [x] at
         Monday beginning from 3 am to 6 pm.
-        >>> router.time_limit(username="User-1", mac="xx:xx...", days="Mon", start=3, end=6)
+        >>> papi.time_limit(username="User-1", mac="xx:xx...", days="Mon", start=3, end=6)
 
         Sets time limit from Monday to Friday.
-        >>> router.time_limit(username="User-1", mac="xx:xx...", days="Mon-Fri", start=3, end=6)
+        >>> papi.time_limit(username="User-1", mac="xx:xx...", days="Mon-Fri", start=3, end=6)
         '''
 
         # The day field in the request takes the power of 2 for the corresponding day in week.
         # Monday is    2^0
         # Tuesday is   2^1
         # Wednesday is 2^2
+        
         week_days = {
         "Mon": 1,
         "Tue": 2,
@@ -163,39 +165,8 @@ class Router():
         "Fri": 16,
         "Sat": 32,
         "Sun": 64,
-        "Everyday": 127}
-
-
-        def convert_time(start_time="1", end_time="23:59"):
-            # TODO : Add test that the numbers after : shouldn't exceed 60 (minutes)
-            '''
-            Converts time to minutes.
-            Takes time and splits it by ":", the first element before ":" is in
-            hour and the second element is in minutes.
-
-            Parameters:
-            - start_time: start time to apply limit from. Eg: 1:00 (am)
-            - end_time:   end time to apply limit till. Eg: 13:00 (pm)
-
-            Return (Integer):
-                sum of start_time and end_time in format (Hours * 60 + minutes).
-
-            Example:
-            >>> convert_time(13:00, 18:08)
-                # returns (13 * 60) + 00, (18 * 60) + 08
-                780, 1080
-            '''
-            start_time = [int(i) for i in start_time.split(':')]
-            end_time = [int(i) for i in end_time.split(':')]
-            if len(start_time) == 1:
-                start_time.append(00)
-            if len(end_time) == 1:
-                end_time.append(00)
-            # if end_time[0] > 24 or start_time[0] > 24 or end_time[1] > 60 or start_time[1] > 60:
-                # raise custom Exception
-            start_time = (start_time[0] * 60) + start_time[1]
-            end_time = (end_time[0] * 60) + end_time[1]
-            return (start_time, end_time)
+        "Everyday": 127
+        }
 
         gen_params = lambda days: {
         'username': username,
@@ -206,23 +177,18 @@ class Router():
         start, end = convert_time(start_time=start, end_time=end)
         days = days.split('-')
 
-        for keys, val in week_days.items():
-            if days and len(days) < 3:
-                if len(days) == 1:
-                    self.session.get(self.gateway + 'todmngr.tod?action=add&mac={}'.format(mac), params=gen_params(days=week_days[days]))
-                    break
+        if days and len(days) < 3:
+            if len(days) == 1:
+                	self.session.get(self.gateway + 'todmngr.tod?action=add&mac={}'.format(mac), params=gen_params(days=week_days[days[0]]))
 
-                elif len(days) == 2 and days[0] in week_days and days[1] in week_days:
-                    if days[0] == days[1]:
-                        self.session.get(self.gateway + 'todmngr.tod?action=add&mac={}'.format(mac), params=gen_params(days=week_days["Everyday"]))
-                        break
+            elif len(days) == 2 and days[0] in week_days and days[1] in week_days:
+                if days[0] == days[1]:
+                    self.session.get(self.gateway + 'todmngr.tod?action=add&mac={}'.format(mac), params=gen_params(days=week_days["Everyday"]))
 
-                    elif days[0] != days[1]:
-                        self.session.get(self.gateway + 'todmngr.tod?action=add&mac={}'.format(mac), params=gen_params(days=str(week_days[days[1]])))
-                        break
-                        # Mon - Sunday, select the value from sunday and add it to the value preceding it.
-                else:
-                    print("Specified day is not in week_days.")
+                elif days[0] != days[1]:
+                    self.session.get(self.gateway + 'todmngr.tod?action=add&mac={}'.format(mac), params=gen_params(days=str(week_days[days[1]])))
+            else:
+                print("Specified day is not in week_days.")
 
 
     def web_filter(self, url):
@@ -259,3 +225,4 @@ class Router():
         Reboots Router.
         '''
         self.session.get(self.gateway + "rebootinfo.cgi?sessionKey={}".format(self.get_session_key()))
+        
