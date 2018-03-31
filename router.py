@@ -4,15 +4,17 @@ A PTCL router class which allows basic functionality for PTCL router.
 Usage Example:
 # router is used as an instance for the Router class in all examples.
 >>> from router import Router
->>> router = Router(gateway='192.168.1.1')      # Launches session for interacting with router
+>>> papi = Router(gateway='192.168.1.1')      # Launches session for interacting with router
 >>>
->>> router.reboot() # Reboots router
+>>> papi.reboot() # Reboots router
 
->>> router.stationinfo() # Returns a list of active devices
+>>> papi.stationinfo() # Returns a list of active devices
 ['macxxx', 'macxxx2', 'macxx3']
 
->>> router.dhcpinfo() # Returns a dictionary object for dhcpinfo
+>>> papi.dhcpinfo() # Returns a dictionary object for dhcpinfo
+
 {'HOSTNAME': ['Mac', 'LocalIp', 'Expires']}
+
 {'my-computer': ['macxx', '192.168.10.1', '23 Hours, 59 Minutes']}
 '''
 import re

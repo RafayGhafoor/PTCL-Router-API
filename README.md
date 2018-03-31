@@ -42,3 +42,7 @@ The API is currently under heavy development.
 
 ```
 
+# TODO:
+
+- [ ] Writing documentation for the API usage.
+- [ ] Writing unit tests for utilities module.
