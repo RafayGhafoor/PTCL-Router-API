@@ -2,7 +2,7 @@
 A PTCL router class which allows basic functionality for PTCL router.
 
 Usage Example:
-# router is used as an instance for the Router class in all examples.
+# papi is used as an instance for the Router class in all examples.
 >>> from router import Router
 >>> papi = Router(gateway='192.168.1.1')      # Launches session for interacting with router
 >>>
@@ -18,12 +18,11 @@ Usage Example:
 {'my-computer': ['macxx', '192.168.10.1', '23 Hours, 59 Minutes']}
 '''
 import re
-import sys
 
 import requests
 import bs4
 
-from utils import convert_time
+import utils
 
 class Router():
     '''
@@ -36,9 +35,25 @@ class Router():
     '''
     mac_pattern = re.compile(u'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
 
+    week_days = {
+        "Mon": 1,
+        "Tue": 2,
+        "Wed": 4,
+        "Thu": 8,
+        "Fri": 16,
+        "Sat": 32,
+        "Sun": 64,
+        "Everyday": 127
+        }
+
 
     def __init__(self, gateway="192.168.1.1", username="admin", password="ptcl"):
-        self.gateway = "http://" + gateway + '/'
+        if utils.validate_gateway(gateway):
+            self.gateway = "http://" + gateway + '/'
+        else:
+            raise ValueError("Invalid Gateway format specified, Valid format is",
+                             "192.168.1.1")
+
         self.username = username
         self.password = password
         self.dev_info = {}      # Devices info
@@ -67,8 +82,7 @@ class Router():
                 return request_url
 
         except requests.exceptions.ConnectionError:
-            print("Internet Connection Down.\nExiting...")
-            sys.exit()
+            raise Exception("Internet Connection Down.\nExiting...")
 
 
     def get_session_key(self):
@@ -84,7 +98,7 @@ class Router():
         return self.sessionKey
 
 
-    def dhcpinfo(self):
+    def dhcp(self):
         '''
         Gets information from dhcp page.
         Format:
@@ -119,7 +133,7 @@ class Router():
         return self.dev_info
 
 
-    def stationinfo(self):
+    def station(self):
         '''
         Gets information about the connected devices.
         '''
@@ -133,8 +147,9 @@ class Router():
 
         return self.active_dev
 
+
     #TODO if already username defined, raise Error
-    def set_time_limit(self, username="User_1", mac="", days="Everyday", start="1", end="24"):
+    def time_limit(self, username="User_1", mac="", days="Everyday", start="1", end="24"):
         '''
         Restricts user from using internet for limited time.
         Creates a user profile containing mac, days, start_time, end_time.
@@ -159,24 +174,12 @@ class Router():
         # Tuesday is   2^1
         # Wednesday is 2^2
         
-        week_days = {
-        "Mon": 1,
-        "Tue": 2,
-        "Wed": 4,
-        "Thu": 8,
-        "Fri": 16,
-        "Sat": 32,
-        "Sun": 64,
-        "Everyday": 127
-        }
-
         gen_params = lambda days: {
-        'username': username,
-        'days': days, 'start_time': start,
+        'username': username, 'days': days, 'start_time': start,
         'end_time': end, 'sessionKey': self.get_session_key()
         }
 
-        start, end = convert_time(start_time=start, end_time=end)
+        start, end = utils.convert_time(start_time=start, end_time=end)
         days = days.split('-')
 
         if days and len(days) < 3:
@@ -194,9 +197,7 @@ class Router():
 
         return 'Successful'
 		
-		
-
-
+    
     def web_filter(self, url):
         '''
         Block website temporarily/permanently (i.e Temporarily, when time is specified).
@@ -212,9 +213,8 @@ class Router():
         Example:
         >>> router.block('xx:xx:xx:xx:xx:xx')
         '''
-        self.session.get(self.gateway + "wlmacflt.cmd?action=add&rmLst={}&sessionKey={}".format(devmac, self.get_session_key()))
-        return 'Successful'
-
+        return self.session.get(self.gateway + "wlmacflt.cmd?action=add&rmLst={}&sessionKey={}".format(devmac, self.get_session_key())) 
+        
 
     def unblock(self, mac):
         '''
@@ -224,13 +224,15 @@ class Router():
         Example:
         >>> router.unblock('xx:xx:xx:xx:xx:xx')
         '''
-        self.session.get(self.gateway + "wlmacflt.cmd?action=remove&rmLst={}&sessionKey={}".format(udevmac, self.get_session_key()))
-        return 'Successful'
+        return self.session.get(self.gateway + "wlmacflt.cmd?action=remove&rmLst={}&sessionKey={}".format(udevmac, self.get_session_key()))
 
 
     def reboot(self):
         '''
         Reboots Router.
         '''
-        self.session.get(self.gateway + "rebootinfo.cgi?sessionKey={}".format(self.get_session_key()))
-        return 'Successful'
+        return self.session.get(self.gateway + "rebootinfo.cgi?sessionKey={}".format(self.get_session_key()))
+
+
+    def __repr__(self):
+        return self.gateway

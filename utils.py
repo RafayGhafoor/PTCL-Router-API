@@ -1,3 +1,11 @@
+import re
+
+def validate_gateway(gateway):
+    if not re.search("https?://", gateway) and not gateway.endswith('/'):
+        return True
+    return False
+
+
 def convert_time(start_time="1", end_time="23:59"):
         # TODO : Add test that the numbers after : shouldn't exceed 60 (minutes)
         '''
